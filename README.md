@@ -14,22 +14,6 @@ It lets you manage your daily spending, split group expenses, and monitor financ
 - Responsive **Angular Material UI**
 - **JWT-based Authentication** and secure login system
 
-### 🤝 Shared Expense Features
-- Create **Groups** (e.g., “Trip to Goa”, “Flatmates”)
-- Add multiple **members** to a group
-- Add shared transactions and **split them equally or custom**
-- View **who owes whom** and total group balances
-- Mark transactions or debts as **settled**
-- View **group summaries and reports**
-
-### 📊 Expansion Ideas
-- Expense **charts & analytics dashboard**
-- Upload and store **expense receipts**
-- **Recurring transactions** (e.g., monthly rent)
-- **Notifications** for new shared transactions
-- Export data to **PDF / CSV**
-- Admin dashboard for system overview
-
 ---
 
 ## 🧱 Tech Stack

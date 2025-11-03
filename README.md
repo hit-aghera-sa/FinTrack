@@ -36,11 +36,10 @@ It lets you manage your daily spending, split group expenses, and monitor financ
 
 | Layer | Technology |
 |-------|-------------|
-| **Frontend** | Angular 18+, Angular Material, Chart.js |
+| **Frontend** | Angular 18+ |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB + Mongoose |
 | **Authentication** | JWT, bcrypt |
-| **Deployment** | Frontend: Vercel / Netlify <br> Backend: Render / Railway <br> Database: MongoDB Atlas |
 
 ---
 

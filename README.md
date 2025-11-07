@@ -11,7 +11,6 @@ It lets you manage your daily spending, split group expenses, and monitor financ
 - Add, edit, and delete **income and expenses**
 - Categorize transactions (Food, Travel, Rent, Shopping, etc.)
 - View total **balance, income vs. expense** summary
-- Responsive **Angular Material UI**
 - **JWT-based Authentication** and secure login system
 
 ---

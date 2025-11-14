@@ -3,20 +3,20 @@ const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/asyncErrorHandler");
 const AppError = require("../utils/appError");
 
-const signToken = async(payload) => {
-    return await jwt.sign({payload}, process.env.JWT_SECRET, {expiresIn: "10h"})
+const createToken = async(payload) => {
+    return await jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "30d"})
 }
 
 const signUp = catchAsync(async(req, res, next) => {
 
-    const {name, email, password, passwordConfirm} = req.body;
+    const {name, email, password, passwordConfirm, passwordChangedAt, role} = req.body;
     
-    if(!name || !email || !password || !passwordConfirm){
+    if(!name || !email || !password || !passwordConfirm || !role){
         return next(new AppError("All fields are required", 400))
     }
     
-    const newUser = await User.create({name, email, password, passwordConfirm});
-    const token = await signToken({id: newUser._id});
+    const newUser = await User.create({name, email, password, passwordConfirm, passwordChangedAt, role});
+    const token = await createToken({id: newUser._id});
     
     res.status(201).json({status: "success", token: token,data: newUser});
 })
@@ -36,10 +36,9 @@ const login = catchAsync( async (req, res, next) => {
         return next( new AppError("Incorrect email or password", 401))
     }
 
-    const token = await signToken({id: findUser._id});
+    const token = await createToken({id: findUser._id});
     res.status(201).json({status: "success", jwt_token: token,data: findUser});
     
 })
 
 module.exports = {signUp, login};
-

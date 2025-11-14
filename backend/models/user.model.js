@@ -30,12 +30,18 @@ const UserSchema = new mongoose.Schema({
             },
             message: "password do not match"
         }
-    }
+    },
+    role:{
+        type: String,
+        enum: ["user", "admin"],
+        default: "user"
+    },
+    passwordChangedAt: Date,
 });
 
-// password encryption
+// password hashing
 UserSchema.pre('save', async function(next){
-    // if password not changed then don't ecrypt again
+    // if password not changed then don't ecrypt again (isMofified trigger by create and update)
     if(!this.isModified("password")) return next();
 
     // this encrypt only new and changed password
@@ -45,11 +51,22 @@ UserSchema.pre('save', async function(next){
     next()                  //never forget next() while using pre - post middleware
 });
 
-// this line create method inside UserSchema name comparePassword
+// password veridication
 UserSchema.methods.comparePassword = async function(clientPassword, hashedPassword){
     return await bcrypt.compare(clientPassword, hashedPassword);
 }
 
+// check password changed after login
+UserSchema.methods.isPasswordChange = async function(loginTime){
+    
+    if (this.passwordChangedAt){
+        const convertedDate = parseInt(
+            this.passwordChangedAt.getTime() / 1000
+        , 10)
+        return loginTime < convertedDate;
+    }   
+    return false;
+}
 
 const User = mongoose.model("User", UserSchema);
 

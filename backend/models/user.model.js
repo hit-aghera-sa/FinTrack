@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const UserSchema = new mongoose.Schema({
     name:{
@@ -37,6 +38,12 @@ const UserSchema = new mongoose.Schema({
         default: "user"
     },
     passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpire: Date,
+    active:{
+        type: Boolean,
+        default: true
+    }
 });
 
 // password hashing
@@ -50,6 +57,19 @@ UserSchema.pre('save', async function(next){
     this.passwordConfirm = undefined;
     next()                  //never forget next() while using pre - post middleware
 });
+
+UserSchema.pre('save', async function(next){
+    // if password not modified or new document not created
+    if(!this.isModified("password") || this.isNew) return next()
+
+    this.passwordChangedAt = Date.now() - 1000;
+    next()
+})
+
+UserSchema.pre('/^find/', async function(next){
+    this.find({active: {$ne: false}});
+    next();
+})
 
 // password veridication
 UserSchema.methods.comparePassword = async function(clientPassword, hashedPassword){
@@ -67,6 +87,18 @@ UserSchema.methods.isPasswordChange = async function(loginTime){
     }   
     return false;
 }
+
+UserSchema.methods.createResetToken = async function(){
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // valid for 10 minutes after created
+    this.passwordResetTokenExpire = Date.now() + 10 * 60 * 1000;
+
+    return resetToken;
+}
+
 
 const User = mongoose.model("User", UserSchema);
 

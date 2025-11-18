@@ -1,5 +1,6 @@
 const express = require("express");
 const userRoute = require("./routers/users.route.js");
+const categoryRoute = require("./routers/categories.route.js")
 const AppError = require("./utils/appError.js");
 const helmet = require("helmet");
 const app = express();
@@ -9,6 +10,7 @@ app.use(express.json());
 app.use(helmet());
 
 app.use("/api/user", userRoute);
+app.use("/api/category", categoryRoute);
 
 // handle unhandled api call
 app.use((req, res, next) => {
@@ -18,6 +20,23 @@ app.use((req, res, next) => {
 // global error handler
 app.use((err, req, res, next) => {
   console.error("Error:", err.message);
+
+  // Schema validation error
+  if (err.name === "ValidationError") {
+    const messages = Object.values(err.errors).map(e => e.message);
+    return res.status(400).json({
+      status: "fail",
+      message: messages.join(". ")
+    }); 
+  }
+
+  // Handle Mongoose CastError (invalid ObjectId)
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      status: "fail",
+      message: `Invalid ${err.path}: ${err.value}`
+    });
+  }
   
   // jwt invalid token
   if (err.name === "JsonWebTokenError") {

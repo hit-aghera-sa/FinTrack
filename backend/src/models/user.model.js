@@ -6,7 +6,13 @@ const crypto = require("crypto");
 const UserSchema = new mongoose.Schema({
     name:{
         type: String,
-        required: [true, "name is required"]
+        required: [true, "name is required"],
+        validate: {
+            validator: function(val){
+                return typeof(val) === "string";
+            },
+            message: "name must be a string"
+        }
     },
     email:{
         type: String,
@@ -34,7 +40,10 @@ const UserSchema = new mongoose.Schema({
     },
     role:{
         type: String,
-        enum: ["user", "admin"],
+        enum: {
+            values: ["admin", "user"],
+            message: "user role must be user or admin"
+        },
         default: "user"
     },
     passwordChangedAt: Date,
@@ -44,7 +53,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     }
-});
+},
+{
+    timestamps: true
+}
+);
 
 // password hashing
 UserSchema.pre('save', async function(next){

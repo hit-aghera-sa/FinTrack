@@ -31,10 +31,14 @@ const signUp = catchAsync(async(req, res, next) => {
 
     const {name, email, password, passwordConfirm, passwordChangedAt, role} = req.body;
     
+    if (typeof name !== "string") {
+        return next(new AppError("name must be a string", 400));
+    }
+    
     if(!name || !email || !password || !passwordConfirm){
         return next(new AppError("All fields are required", 400))
     }
-    
+
     const newUser = await User.create({name, email, password, passwordConfirm, passwordChangedAt, role});
     sendToken(newUser, 201, res);    
 })
@@ -52,7 +56,6 @@ const login = catchAsync( async (req, res, next) => {
     if(!findUser || !(await findUser.comparePassword(password, findUser.password))){
         return next( new AppError("Incorrect email or password", 401))
     }
-
     sendToken(findUser, 201, res);
 })
 

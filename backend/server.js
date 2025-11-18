@@ -1,22 +1,25 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
+const app = require("./src/app");
+const connectDB = require("./config/db");
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+connectDB();
 
+const port = process.env.PORT || 5001;
 
-// ------------ mongodb databse connection
-const dbconnect = async() => {
-    try{
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log("mongodb connection successfull");
-    }
-    catch(error){
-        console.log("mongodb connection error :", error);
-    }
-}
-dbconnect()
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
-module.exports = app
+// HANDLE UNCAUGHT EXCEPTIONS
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT EXCEPTION! Shutting down...");
+  console.error(err);
+  process.exit(1);
+});
+
+// HANDLE UNHANDLED PROMISE REJECTIONS
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED REJECTION! Shutting down server...");
+  console.error(err);
+  server.close(() => process.exit(1));
+});

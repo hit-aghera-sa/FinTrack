@@ -41,7 +41,7 @@ const restrictTo = (...roles) => {
 
     return(req, res, next) => {
         if(!roles.includes(req.user.role)){
-            return next( AppError("Unauthorize to perform this operation", 403));
+            return next( new AppError("Unauthorize to perform this operation", 403));
         }
         next()
     }

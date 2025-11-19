@@ -4,18 +4,26 @@ const { protect, restrictTo} = require("../middlewares/auth.middleware");
 const { getAllUsers, getUser, updateMe, deleteMe, deleteUser} = require("../controllers/user.controller");
 const {signupLimiter, loginLimiter, forgotLimiter} = require("../utils/rateLimitor")
 
-const Router = express.Router();
+const router = express.Router();
 
-Router
-    .get("/getAllUsers", protect, restrictTo("admin"), getAllUsers)
-    .get("/getUser/:id", protect, restrictTo("admin"),getUser)
-    .post("/signUp", signupLimiter, signUp)
+router    
+    .post("/signup", signupLimiter, signUp)
     .post("/login", loginLimiter, login)
-    .post("/forgotPassword", forgotLimiter,forgotPassword)
-    .patch("/resetPassword/:token", resetPassword)
-    .patch("/updatePassword", protect, updatePassword)
-    .patch("/updateMe", protect, updateMe)
-    .delete("/deleteMe",protect, deleteMe)
-    .delete("/deleteUser/:id", protect, restrictTo("admin"),deleteUser)
+    .post("/forgot-password", forgotLimiter,forgotPassword)
+    .patch("/reset-password/:token", resetPassword)
+
+router.use(protect);
+
+router   
+    .patch("/update-password", updatePassword)
+    .patch("/update-me", updateMe)
+    .delete("/delete-me", deleteMe)
+
+router.use(restrictTo("admin"));
+
+router
+    .get("/", getAllUsers)
+    .get("/:id", getUser)
+    .delete("/:id", deleteUser)
     
-module.exports = Router;
+module.exports = router;

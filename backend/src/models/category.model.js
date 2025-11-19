@@ -17,10 +17,20 @@ const categorySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: [true, "userId is required"]
+    },
+    active:{
+        type: Boolean,
+        default: true,
+        select: false
     }
 },
 {
     timestamps: true
+})
+
+categorySchema.pre(/^find/, async function(next){
+    this.find({active: {$ne: false}});
+    next()
 })
 
 const Category = mongoose.model("Category", categorySchema);

@@ -7,12 +7,6 @@ const UserSchema = new mongoose.Schema({
     name:{
         type: String,
         required: [true, "name is required"],
-        validate: {
-            validator: function(val){
-                return typeof(val) === "string";
-            },
-            message: "name must be a string"
-        }
     },
     email:{
         type: String,
@@ -51,7 +45,8 @@ const UserSchema = new mongoose.Schema({
     passwordResetTokenExpire: Date,
     active:{
         type: Boolean,
-        default: true
+        default: true,
+        select: false
     }
 },
 {
@@ -79,7 +74,7 @@ UserSchema.pre('save', async function(next){
     next()
 })
 
-UserSchema.pre('/^find/', async function(next){
+UserSchema.pre(/^find/, async function(next){
     this.find({active: {$ne: false}});
     next();
 })

@@ -1,10 +1,10 @@
 const User = require("../models/user.model");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/asyncErrorHandler");
-const filterFields = (obj, ...allfields) => {
+const filterFields = (obj, ...allowedFields) => {
     let newObj = {};
     Object.keys(obj).forEach( el => {
-        if(allfields.includes(el)){
+        if(allowedFields.includes(el)){
             newObj[el] = obj[el];
         }
     })  
@@ -21,7 +21,7 @@ const getAllUsers = catchAsync(async(req, res, next) => {
 
 const getUser =  catchAsync(async (req, res, next) => {
     const userId = req.params.id;
-    if(!userId) return next(new AppError("userId not found", 404))
+    if(!userId) return next(new AppError("userId not proovided", 404))
 
     const user = await User.findById(userId);
     if(!user) return next( new AppError("user not found", 404));
@@ -56,7 +56,7 @@ const deleteMe = catchAsync(async (req, res, next) => {
 
 const deleteUser = catchAsync(async (req, res, next) => {
     const id = req.params.id;
-    if(!id) return next("id not found", 404)
+    if(!id) return next("id not provided", 404)
 
     const deletedUser = await User.findByIdAndDelete(id);
     if(!deletedUser) return next( new AppError("user not found", 404));

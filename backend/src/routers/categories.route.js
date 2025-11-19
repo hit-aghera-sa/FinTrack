@@ -14,7 +14,7 @@ router
 router.use(restrictTo("admin"));
 
 router
-    .get("/getAll", getAllCategories)
+    .get("/all", getAllCategories)
     .get("/:id", getCategory)
 
 module.exports = router;

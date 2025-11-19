@@ -79,7 +79,7 @@ UserSchema.pre(/^find/, async function(next){
     next();
 })
 
-// password veridication
+// password verification
 UserSchema.methods.comparePassword = async function(clientPassword, hashedPassword){
     return await bcrypt.compare(clientPassword, hashedPassword);
 }

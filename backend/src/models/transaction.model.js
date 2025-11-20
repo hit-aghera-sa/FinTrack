@@ -35,12 +35,12 @@ const transactionSchema = new mongoose.Schema({
         default: true,
         select: false
     },
-    isRecuring:{
+    isRecurring:{
         type: Boolean,
         default: false
     },
     isSubscription:{
-        type: String,
+        type: Boolean,
         default: false
     }
 },

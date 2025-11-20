@@ -1,4 +1,6 @@
 const User = require("../models/user.model");
+const Category = require("../models/category.model");
+const Transaction = require("../models/transaction.model");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/asyncErrorHandler");
 
@@ -22,7 +24,7 @@ const getAllUsers = catchAsync(async(req, res, next) => {
 
 const getUser =  catchAsync(async (req, res, next) => {
     const userId = req.params.id;
-    if(!userId) return next(new AppError("userId not proovided", 404))
+    if(!userId) return next(new AppError("userId not proovided", 400))
 
     const user = await User.findById(userId);
     if(!user) return next( new AppError("user not found", 404));
@@ -48,21 +50,35 @@ const updateMe = catchAsync( async(req, res, next) => {
     res.status(200).json({status: "success", updatedUser: user})
 })
 
-const deleteMe = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user.id, {active: false});
+const deactiveMe = catchAsync(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(
+        {_id: req.user.id},
+        {active: true},
+        {new: true}
+    );
     if(!user) return next(new AppError("User not found", 404));
+
+    await Category.updateMany({userId: req.user.id}, {active: true});
+    await Transaction.updateMany({userId: req.user.id}, {active: true});
+    res.status(204).json({status: "success", data: null});
+})
+
+const deactiveUser = catchAsync(async (req, res, next) => {
+    const id = req.params.id;
+    if(!id) return next("id not provided", 400)
+
+    const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {active: false},
+        {new: true}
+    );
+    if(!user) return next(new AppError("User not found", 404));
+
+    await Category.updateMany({userId: req.user.id}, {active: false});
+    await Transaction.updateMany({userId: req.user.id}, {active: false});
+    if(!user) return next( new AppError("user not found", 404));
 
     res.status(204).json({status: "success", data: null});
 })
 
-const deleteUser = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
-    if(!id) return next("id not provided", 404)
-
-    const deletedUser = await User.findByIdAndDelete(id);
-    if(!deletedUser) return next( new AppError("user not found", 404));
-
-    res.status(200).json({status: "success", deletedUser: deletedUser});
-})
-
-module.exports = {getAllUsers, getUser, updateMe, deleteMe, deleteUser}
+module.exports = {getAllUsers, getUser, updateMe, deactiveMe, deactiveUser}

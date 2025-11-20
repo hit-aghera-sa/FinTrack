@@ -1,4 +1,5 @@
 const Category = require("../models/category.model");
+const Transaction = require("../models/transaction.model");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/asyncErrorHandler");
 const filterFields = (obj, ...allowedFields) => {
@@ -56,10 +57,13 @@ const getMyCategory = catchAsync( async (req, res, next) => {
 
 const getCategory = catchAsync( async (req, res, next) => {
     const categoryId = req.params.id;
-    if(!categoryId) return next(new AppError("categoryId not provided", 404));
+    if(!categoryId) return next(new AppError("categoryId not provided", 400));
 
-    // user can access user's own category only
-    const category = await Category.findOne({_id: categoryId, userId: req.user.id})
+    // user can access user's own category only and admin can accesss any
+
+    const query = req.user.role === "admin" ? { _id: categoryId } : { _id: categoryId, userId: req.user.id };
+
+    const category = await Category.findOne(query)
     if(!category) return next(new AppError("category not found", 404))
 
     res.status(200).json({status: "success", data: category});
@@ -69,10 +73,10 @@ const updateCategory = catchAsync( async(req, res, next) => {
     const categoryId = req.params.id;
 
     if(!categoryId){ 
-        return next(new AppError("categoryId not provided", 404));
+        return next(new AppError("categoryId not provided", 400));
     }
     
-    const filteredBody = filterFields(req.body, "name", "type");
+    const filteredBody = filterFields(req.body, "name");
 
     const category = await Category.findOneAndUpdate(
         {_id: categoryId, userId: req.user.id},
@@ -87,11 +91,11 @@ const updateCategory = catchAsync( async(req, res, next) => {
     res.status(200).json({status: "success", data: category});
 })
 
-const deleteCategory = catchAsync( async (req, res, next) => {
+const deactiveCategory = catchAsync( async (req, res, next) => {
     const categoryId = req.params.id;
     
     if(!categoryId){ 
-        return next(new AppError("categoryId not provided", 404));
+        return next(new AppError("categoryId not provided or not allowed", 400));
     }
 
     const category = await Category.findOneAndUpdate(
@@ -99,10 +103,10 @@ const deleteCategory = catchAsync( async (req, res, next) => {
         {active: false},
         {new: true}
     )    
-    console.log(`categoryId: ${categoryId} and userId: ${req.user.id} category: ${category}`);
     if(!category) return next(new AppError("category not found", 404))
 
-    res.status(200).json({status: "success", data: category});
+    await Transaction.updateMany({categoryId, userId: req.user.id}, {active: false});
+    res.status(204).json({status: "success", data: null});
 })
 
-module.exports = {getAllCategories, getCategory, getMyCategory, createCategory, updateCategory, deleteCategory};
+module.exports = {getAllCategories, getCategory, getMyCategory, createCategory, updateCategory, deactiveCategory};

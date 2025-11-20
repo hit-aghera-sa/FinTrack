@@ -1,7 +1,7 @@
 const express = require("express");
 const {signUp, login, forgotPassword, resetPassword, updatePassword } = require("../controllers/auth.controller");
 const { protect, restrictTo} = require("../middlewares/auth.middleware");
-const { getAllUsers, getUser, updateMe, deleteMe, deleteUser} = require("../controllers/user.controller");
+const { getAllUsers, getUser, updateMe, deactiveMe, deactiveUser} = require("../controllers/user.controller");
 const {signupLimiter, loginLimiter, forgotLimiter} = require("../utils/rateLimitor")
 
 const router = express.Router();
@@ -17,13 +17,13 @@ router.use(protect);
 router   
     .patch("/update-password", updatePassword)
     .patch("/update-me", updateMe)
-    .delete("/delete-me", deleteMe)
+    .delete("/delete-me", deactiveMe)
 
 router.use(restrictTo("admin"));
 
 router
     .get("/", getAllUsers)
     .get("/:id", getUser)
-    .delete("/:id", deleteUser)
+    .delete("/:id", deactiveUser)
     
 module.exports = router;

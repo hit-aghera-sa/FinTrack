@@ -3,31 +3,104 @@ const Category = require("../models/category.model");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/asyncErrorHandler");
 
+const filterFields = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if(allowedFields.includes(el)){
+      newObj[el] = obj[el];
+    }
+  })
+  return newObj;
+}
+
 const createTransaction = catchAsync( async (req, res, next) => {
 
-    const {type, amount, categoryId, userId, description, date, isRecuring, isSubscription} = req.body;
+  const {amount,categoryId, description, date, isRecurring, isSubscription} = req.body;
 
-    if(!type || !amount || !categoryId || !userId ){
-        return next( new AppError("type, amount,  categoryId and userId are required"), 400);
-    }
+  if(!amount || !categoryId){
+    return next( new AppError("amount and categoryId are required", 400));
+  }
 
-    const category = await Category.findOne({_id: categoryId, userId});
-    if(!category) return next(new AppError("category not found for this user", 404))
+  const userId = req.user.id;
 
-    if(category.type !== type) return next(new AppError("Transaction type does not match category type", 400))
+  const category = await Category.findOne({_id: categoryId, userId});
+  if(!category) return next(new AppError("category not found for this user", 404))
 
-    const transaction = await Transaction.create({
-      type,
-      amount,
-      categoryId,
-      userId,
-      description,
-      date,
-      isRecuring,
-      isSubscription,
-    });
+  if (!category.active) {
+    return next(new AppError("Cannot add transaction under a deleted category", 400));
+  }
 
-    res.status(201).json({status: "success", data: transaction});
+  const transaction = await Transaction.create({
+    type: category.type,
+    amount,
+    categoryId,
+    userId,
+    description,
+    date,
+    isRecurring,
+    isSubscription,
+  });
+
+  res.status(201).json({status: "success", data: transaction});
 })
 
-module.exports = {createTransaction};
+const getAllTransction = catchAsync( async  ( req, res, next) => {
+  const transaction = await Transaction.find();
+  if(transaction.length === 0) return next( new AppError("transaction not found", 404));
+
+  res.status(200).json({status: "success", data: transaction});
+})
+
+const getMyTransaction = catchAsync( async  ( req, res, next) => {
+  const userId = req.user.id;
+
+  const transaction = await Transaction.find({userId});
+
+  res.status(200).json({status: "success",  results: transaction.length, data: transaction});
+})
+
+const getTransaction = catchAsync( async  ( req, res, next) => {
+  const transactionId = req.params.id;
+  if(!transactionId) return next( new AppError("transaction id not provided", 404));
+
+  const query = req.user.role === "admin" ? { _id: transactionId } : { _id: transactionId, userId: req.user.id };
+
+  const transaction = await Transaction.findOne(query);
+  if(!transaction) return next( new AppError("transaction not found", 404));
+
+  res.status(200).json({status: "success", data: transaction});
+})
+
+const updateTransaction = catchAsync( async ( req, res, next) => {
+  const transactionId = req.params.id;
+  if(!transactionId) return next( new AppError("transaction id not provided", 404));
+  console.log("update transaction called");
+
+  const filteredBody = filterFields(req.body, "amount", "description", "date", "isRecurring", "isSubscription")
+  console.log(filteredBody);
+
+  const transaction = await Transaction.findOneAndUpdate(
+    {_id: transactionId, userId: req.user.id},
+    filteredBody,
+    {new: true}
+  );
+
+  if(!transaction) return next( new AppError("transaction not found", 404));
+  res.status(200).json({status: "success", data: transaction})
+})
+
+const deactiveTransaction = catchAsync( async  ( req, res, next) => {
+  const transactionId = req.params.id;
+  if(!transactionId) return next( new AppError("transaction id not provided", 404));
+
+  const transaction = await Transaction.findOneAndUpdate(
+    { _id: transactionId, userId: req.user.id },
+    {active: false},
+    {new: true}
+  );
+  if(!transaction) return next( new AppError("transaction not found", 404));
+
+  res.status(204).json({status: "success", data: null});
+})
+
+module.exports = {createTransaction, getAllTransction, getMyTransaction, getTransaction, updateTransaction, deactiveTransaction};

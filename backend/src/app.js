@@ -2,6 +2,7 @@ const express = require("express");
 const userRoute = require("./routers/users.route.js");
 const categoryRoute = require("./routers/categories.route.js")
 const transactionRoute = require("./routers/transactions.route.js")
+const attachmentRoute = require("./routers/attechments.route.js")
 const AppError = require("./utils/appError.js");
 const helmet = require("helmet");
 const app = express();
@@ -13,6 +14,7 @@ app.use(helmet());
 app.use("/api/user", userRoute);
 app.use("/api/category", categoryRoute);
 app.use("/api/transaction", transactionRoute);
+app.use("/api/attachment", attachmentRoute);
 
 // handle unhandled api call
 app.use((req, res, next) => {

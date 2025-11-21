@@ -1,5 +1,6 @@
 const Category = require("../models/category.model");
 const Transaction = require("../models/transaction.model");
+const User = require("../models/user.model");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/asyncErrorHandler");
 const filterFields = (obj, ...allowedFields) => {
@@ -31,8 +32,11 @@ const createCategory = catchAsync( async (req, res, next) => {
     const trimmedName = name.trim();
     const trimmedType = type.trim();
 
-    const isCategoryExist = await Category.findOne({name: trimmedName, userId});
+    const user = await User.findById(userId);
+    if(!user) return next(new AppError("user not found for this user", 404))
+    if (user.active) return next(new AppError("Cannot add category under a deleted user", 400))
 
+    const isCategoryExist = await Category.findOne({name: trimmedName, userId});
     if(isCategoryExist) return next(new AppError("category allready exists", 400))
 
     const newCategory = await Category.create({name: trimmedName, type: trimmedType, userId});

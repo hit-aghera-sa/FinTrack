@@ -30,6 +30,10 @@ const transactionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    attachments:{
+        type: [String],
+        default: []
+    },
     active:{
         type: Boolean,
         default: true,

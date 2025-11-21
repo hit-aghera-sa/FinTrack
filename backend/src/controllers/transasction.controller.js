@@ -13,7 +13,7 @@ const filterFields = (obj, ...allowedFields) => {
   return newObj;
 }
 
-const createTransaction = catchAsync( async (req, res, next) => {
+const createTransaction = catchAsync( async ( req, res, next) => {
 
   const {amount,categoryId, description, date, isRecurring, isSubscription} = req.body;
 
@@ -25,10 +25,7 @@ const createTransaction = catchAsync( async (req, res, next) => {
 
   const category = await Category.findOne({_id: categoryId, userId});
   if(!category) return next(new AppError("category not found for this user", 404))
-
-  if (!category.active) {
-    return next(new AppError("Cannot add transaction under a deleted category", 400));
-  }
+  if (category.active) return next(new AppError("Cannot add transaction under a deleted category", 400))
 
   const transaction = await Transaction.create({
     type: category.type,

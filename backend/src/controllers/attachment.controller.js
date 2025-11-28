@@ -40,7 +40,9 @@ const deleteAttachment = catchAsync( async ( req, res, next) => {
   const filePath = path.join(__dirname, "..", transaction.attachments[index]);
 
   // remove from server
-  await fs.promises.unlink(filePath)
+  await fs.unlink(filePath, (err) => {
+    console.log(err)
+  })
 
   // remove from database
   transaction.attachments.splice(index, 1);

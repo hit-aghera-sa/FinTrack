@@ -52,12 +52,15 @@ const getAllCategories = catchAsync( async (req, res, next) => {
     res.status(200).json({status: "success", data: allCategory});
 })
 
-const getMyCategory = catchAsync( async (req, res, next) => {
-    const category = await Category.find({userId: req.user.id});
-    if(category.length === 0) return next( new AppError("category not found", 404));
+const getMyCategory = catchAsync(async (req, res, next) => {
+    const categories = await Category.find({ userId: req.user.id });
 
-    res.status(200).json({status: "success", data: category});
-})
+    res.status(200).json({
+    status: "success",
+    results: categories.length,
+    data: categories
+    });
+});
 
 const getCategory = catchAsync( async (req, res, next) => {
     const categoryId = req.params.id;

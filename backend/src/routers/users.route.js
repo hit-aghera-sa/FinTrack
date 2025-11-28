@@ -1,5 +1,5 @@
 const express = require("express");
-const {signUp, login, forgotPassword, resetPassword, updatePassword } = require("../controllers/auth.controller");
+const {signUp, login, forgotPassword, resetPassword, updatePassword, logout } = require("../controllers/auth.controller");
 const { protect, restrictTo} = require("../middlewares/auth.middleware");
 const { getAllUsers, getUser, updateMe, deactiveMe, deactiveUser} = require("../controllers/user.controller");
 const {signupLimiter, loginLimiter, forgotLimiter} = require("../utils/rateLimitor")
@@ -18,6 +18,7 @@ router
     .patch("/update-password", updatePassword)
     .patch("/update-me", updateMe)
     .delete("/delete-me", deactiveMe)
+    .post("/logout", logout);
 
 router.use(restrictTo("admin"));
 

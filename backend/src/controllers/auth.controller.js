@@ -5,27 +5,28 @@ const AppError = require("../utils/appError");
 const sendEmail = require("../utils/email");
 const crypto = require("crypto");
 
-const createToken = async(payload) => {
-    return await jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "30d"})
-}
+const createToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
 
-const sendToken = async (user, statusCode, res) => {
-    const token = await createToken({id: user._id});
+const sendToken = (user, statusCode, res) => {
+  const token = createToken({ id: user._id });
 
-    res.cookie("jwt_cookie",
-        token,
-        {
-            expiresIn: new Date(Date.now + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-            // secure: true,
-            httpOnly: true
-        }
-    )
-    res.status(statusCode).json({
-        status: "success",
-        token: token,
-        data: user
-    });
-}
+  res.cookie("jwt_cookie", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // auto secure in prod
+    sameSite: "lax",
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+  });
+
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: "success",
+    data: user
+  });
+};
+
 
 const signUp = catchAsync(async(req, res, next) => {
 
@@ -52,11 +53,11 @@ const login = catchAsync( async (req, res, next) => {
     }
 
     // this will not include password, so add it
-    const findUser = await User.findOne({email}).select("+password");
-    if(!findUser || !(await findUser.comparePassword(password, findUser.password))){
+    const user = await User.findOne({email}).select("+password");
+    if(!user || !(await user.comparePassword(password, user.password))){
         return next( new AppError("Incorrect email or password", 401))
     }
-    sendToken(findUser, 201, res);
+    sendToken(user, 200, res);
 })
 
 
@@ -130,4 +131,15 @@ const updatePassword = catchAsync( async(req, res, next) => {
     sendToken(findUser, 201, res);
 })
 
-module.exports = {signUp, login, forgotPassword, resetPassword, updatePassword};
+const logout = (req, res) => {
+  res.cookie("jwt_cookie", "", {
+    httpOnly: true,
+    secure: false, 
+    sameSite: "lax",
+    expires: new Date(0)   // delete cookie
+  });
+
+  res.status(200).json({ status: "success", message: "Logged out" });
+};
+
+module.exports = {signUp, login, logout, forgotPassword, resetPassword, updatePassword};

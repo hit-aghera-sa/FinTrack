@@ -65,6 +65,40 @@ export const routes: Routes = [
       import('./categories/add-category/add-category').then(m => m.AddCategory)
   },
 
+  // EDIT CATEGORY
+  {
+    path: 'edit-category/:id',
+    loadComponent: () =>
+      import('./categories/edit-category/edit-category').then(m => m.EditCategory),
+    canActivate: [authGuard]
+  },
+
+  // ALL TRANSACTIONS PAGE
+  {
+    path: 'transactions',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./transactions/transactions').then(m => m.TransactionsPage)
+  },
+
+  // ADD TRANSACTION PAGE
+  {
+    path: 'add-transaction',
+    loadComponent: () =>
+      import('./transactions/add-transaction/add-transaction')
+        .then(m => m.AddTransaction),
+    canActivate: [authGuard]
+  },
+
+  // EDIT TRANSACTION PAGE
+  {
+    path: 'edit-transaction/:id',
+    loadComponent: () =>
+      import('./transactions/edit-transaction/edit-transaction')
+        .then(m => m.EditTransaction),
+    canActivate: [authGuard]
+  },
+
   // FALLBACK
   { path: '**', redirectTo: 'signup' }
 ];

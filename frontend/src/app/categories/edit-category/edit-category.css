@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+/* Simple scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .max-w-6xl {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  
+  .p-8 {
+    padding: 1.5rem;
+  }
+  
+  .text-4xl {
+    font-size: 2rem;
+  }
+  
+  .flex-col {
+    flex-direction: column;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1.5rem;
+  }
+}

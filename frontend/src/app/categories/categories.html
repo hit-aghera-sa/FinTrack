@@ -44,7 +44,7 @@
       </button>
     </div>
 
- <!-- Stats Overview -->
+    <!-- Stats Overview -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Total Categories -->
       <div class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300">
@@ -100,49 +100,50 @@
     </div>
 
     <!-- Empty -->
-    <div *ngIf="!loading() && categories().length === 0" 
+    <div *ngIf="!loading() && categories().length === 0"
          class="bg-gray-800 border border-gray-700 rounded-2xl p-12 text-center">
-      <h3 class="text-2xl font-bold text-white mb-3">No categories yet</h3>
-      <p class="text-gray-400 mb-8 max-w-md mx-auto">
-        Create your first category to start organizing your transactions.
-      </p>
 
-      <button
-        (click)="goToAdd()"
-        class="px-8 py-4 bg-blue-600 text-white rounded-2xl font-semibold flex items-center space-x-3 mx-auto"
-      >
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        <span>Create Category</span>
-      </button>
+      <!-- ... EMPTY STATE UNCHANGED ... -->
+
     </div>
 
-    <!-- Categories Grid -->
-    <div *ngIf="!loading() && categories().length > 0" 
-         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Categories Grid -->
+  <div *ngIf="!loading() && categories().length > 0"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <div
-        *ngFor="let cat of categories()"
-        class="bg-gray-800 border border-gray-700 rounded-2xl p-6 relative"
-      >
+    <div
+      *ngFor="let cat of paginatedCategories()"
+      class="group bg-gradient-to-br from-gray-800/60 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl relative overflow-hidden"
+    >
+
+      <!-- Background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0"></div>
+
+      <div class="relative z-10">
+
+        <!-- Header -->
         <div class="flex items-start justify-between mb-4">
+
+          <!-- Icon + Name -->
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center"
-                 [class.bg-green-500/20]="cat.type === 'income'"
-                 [class.bg-red-500/20]="cat.type === 'expense'">
+                [class.bg-green-500/20]="cat.type === 'income'"
+                [class.bg-red-500/20]="cat.type === 'expense'">
 
               <svg class="w-5 h-5"
-                   [class.text-green-400]="cat.type === 'income'"
-                   [class.text-red-400]="cat.type === 'expense'"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path *ngIf="cat.type === 'income'"
-                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  [class.text-green-400]="cat.type === 'income'"
+                  [class.text-red-400]="cat.type === 'expense'"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
+                <!-- Income Icon -->
+                <path *ngIf="cat.type === 'income'"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+
+                <!-- Expense Icon -->
                 <path *ngIf="cat.type === 'expense'"
-                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
 
             </div>
@@ -155,25 +156,105 @@
             </div>
           </div>
 
-          <span
-            class="px-3 py-1.5 rounded-full text-xs font-semibold border"
+          <!-- Type Badge -->
+          <span class="px-3 py-1.5 rounded-full text-xs font-semibold border shadow-sm"
             [class.bg-red-500/10]="cat.type === 'expense'"
             [class.text-red-400]="cat.type === 'expense'"
             [class.border-red-500/30]="cat.type === 'expense'"
             [class.bg-green-500/10]="cat.type === 'income'"
             [class.text-green-400]="cat.type === 'income'"
-            [class.border-green-500/30]="cat.type === 'income'"
-          >
+            [class.border-green-500/30]="cat.type === 'income'">
             {{ cat.type === 'income' ? 'Income' : 'Expense' }}
           </span>
+
         </div>
 
+        <!-- Created Date -->
         <div class="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-gray-700/50">
           <span>Created</span>
           <span>{{ cat.createdAt ? (cat.createdAt | date:'mediumDate') : 'Recently' }}</span>
         </div>
+
+        <!-- ACTION BUTTONS (Final placement) -->
+        <div class="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-gray-700/50">
+
+          <!-- Edit -->
+          <button
+            (click)="editCategory(cat)"
+            class="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-xs font-medium border border-blue-500/30">
+            Edit
+          </button>
+
+          <!-- Delete -->
+          <button
+            (click)="openDelete(cat)"
+            class="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-medium border border-red-500/30">
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="deleteTarget()"
+      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+    <div class="bg-gray-800 w-full max-w-md rounded-2xl p-6 border border-gray-700 shadow-xl">
+
+      <h2 class="text-xl font-bold text-white mb-3">Delete Category?</h2>
+      <p class="text-gray-300 mb-6">
+        Are you sure you want to delete 
+        <span class="text-red-400 font-semibold">{{ deleteTarget()?.name }}</span>?
+        This action cannot be undone.
+      </p>
+
+      <div class="flex justify-end gap-3">
+        <button (click)="closeDelete()" class="px-4 py-2 bg-gray-700 text-white rounded-xl">Cancel</button>
+        <button (click)="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-xl">Delete</button>
       </div>
 
     </div>
   </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-3 mt-10"
+      *ngIf="totalPages() > 1">
+
+    <!-- Prev -->
+    <button
+      (click)="prevPage()"
+      class="px-4 py-2 bg-gray-700 text-white rounded-lg"
+      [disabled]="currentPage() === 1">
+      Prev
+    </button>
+
+    <!-- Page Numbers -->
+    <div class="flex items-center gap-2">
+      <button
+        *ngFor="let page of [].constructor(totalPages()); let i = index"
+        (click)="goToPage(i+1)"
+        class="px-3 py-2 rounded-lg"
+        [class.bg-blue-600]="currentPage() === (i+1)"
+        [class.text-white]="currentPage() === (i+1)"
+        [class.bg-gray-700]="currentPage() !== (i+1)"
+        [class.text-gray-300]="currentPage() !== (i+1)">
+        {{ i + 1 }}
+      </button>
+    </div>
+
+    <!-- Next -->
+    <button
+      (click)="nextPage()"
+      class="px-4 py-2 bg-gray-700 text-white rounded-lg"
+      [disabled]="currentPage() === totalPages()">
+      Next
+    </button>
+
+  </div>
+
 </div>

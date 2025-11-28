@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+/* remove animations */
+* {
+  transition: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 10px;
+}
+/* Remove arrows/spinners from number input - Chrome, Edge, Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove arrows - Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

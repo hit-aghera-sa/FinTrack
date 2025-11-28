@@ -1,0 +1,166 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+
+  <!-- Navbar -->
+  <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">₹</span>
+          </div>
+          <h1 class="text-xl font-bold text-white">FinTrack</h1>
+        </div>
+
+        <button
+          (click)="logout()"
+          class="px-3 py-1.5 bg-red-600 text-white rounded-lg font-medium"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-xl mx-auto px-4 py-6">
+
+    <!-- Header -->
+    <div class="mb-6 text-center">
+      <h2 class="text-2xl font-bold text-white mb-1">Edit Transaction</h2>
+      <p class="text-gray-400 text-sm">Update your income or expense</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-lg">
+
+      <form (ngSubmit)="submit()" class="space-y-4">
+
+        <!-- Title -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Title</label>
+          <input
+            type="text"
+            [(ngModel)]="title"
+            name="title"
+            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm"
+            [class.border-red-500]="errorMessage"
+            placeholder="e.g. Grocery, Salary"
+          />
+        </div>
+
+        <!-- Amount -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Amount</label>
+          <input
+            type="number"
+            [(ngModel)]="amount"
+            name="amount"
+            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm custom-number"
+            [class.border-red-500]="errorMessage"
+            placeholder="e.g. 399"
+          />
+        </div>
+
+        <!-- Type Selector -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Type</label>
+          <div class="grid grid-cols-2 gap-3">
+
+            <!-- Expense -->
+            <div class="cursor-pointer" (click)="type = 'expense'">
+              <div
+                class="p-3 h-16 flex flex-col justify-center border-2 rounded-xl text-center"
+                [class.border-red-500]="type === 'expense'"
+                [class.border-gray-600]="type !== 'expense'"
+              >
+                <span class="font-semibold text-red-400 text-sm">Expense</span>
+              </div>
+            </div>
+
+            <!-- Income -->
+            <div class="cursor-pointer" (click)="type = 'income'">
+              <div
+                class="p-3 h-16 flex flex-col justify-center border-2 rounded-xl text-center"
+                [class.border-green-500]="type === 'income'"
+                [class.border-gray-600]="type !== 'income'"
+              >
+                <span class="font-semibold text-green-400 text-sm">Income</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Category</label>
+          <select
+            [(ngModel)]="categoryId"
+            name="categoryId"
+            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm"
+          >
+            <option value="" disabled>Select Category</option>
+
+            <option *ngFor="let cat of filteredCategories()" [value]="cat._id">
+              {{ cat.name }} ({{ cat.type }})
+            </option>
+
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Date</label>
+          <input
+            type="date"
+            [(ngModel)]="date"
+            name="date"
+            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm"
+          />
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="text-gray-300 block mb-1 text-sm font-medium">Note (optional)</label>
+          <textarea
+            [(ngModel)]="note"
+            name="note"
+            rows="2"
+            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm"
+            placeholder="Add a note..."
+          ></textarea>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage"
+             class="bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-2 rounded-lg text-sm">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-3 pt-2">
+
+          <button
+            type="submit"
+            class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-medium text-sm"
+          >
+            Save Changes
+          </button>
+
+          <button
+            type="button"
+            (click)="cancel()"
+            class="flex-1 bg-gray-600 text-white py-3 rounded-xl font-medium text-sm"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

@@ -51,7 +51,7 @@ const getAllTransction = catchAsync( async  ( req, res, next) => {
 const getMyTransaction = catchAsync( async  ( req, res, next) => {
   const userId = req.user.id;
 
-  const transaction = await Transaction.find({userId});
+  const transaction = await Transaction.find({userId}).populate("categoryId", "name type");;
 
   res.status(200).json({status: "success",  results: transaction.length, data: transaction});
 })

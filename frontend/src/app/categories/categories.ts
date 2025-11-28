@@ -16,12 +16,17 @@ export class CategoriesPage implements OnInit {
   categories = signal<any[]>([]);
   loading = signal(true);
 
-  // Computed values for statistics
-  incomeCategoriesCount = computed(() => 
+  deleteTarget = signal<any | null>(null);
+
+  // Pagination signals
+  currentPage = signal(1);
+  pageSize = 9;
+
+  incomeCategoriesCount = computed(() =>
     this.categories().filter(cat => cat.type === 'income').length
   );
 
-  expenseCategoriesCount = computed(() => 
+  expenseCategoriesCount = computed(() =>
     this.categories().filter(cat => cat.type === 'expense').length
   );
 
@@ -58,9 +63,68 @@ export class CategoriesPage implements OnInit {
     this.authService.logout();
   }
 
-  // Optional: Add edit functionality
-  editCategory(category: any): void {
-    // Implement edit functionality
-    console.log('Edit category:', category);
+  /** EDIT CATEGORY */
+  editCategory(cat: any): void {
+    this.router.navigate(['/edit-category', cat._id]);
+  }
+
+  /** DELETE CATEGORY MODAL */
+  openDelete(cat: any): void {
+    this.deleteTarget.set(cat);
+  }
+
+  closeDelete(): void {
+    this.deleteTarget.set(null);
+  }
+
+  confirmDelete(): void {
+    const cat = this.deleteTarget();
+    if (!cat) return;
+
+    this.categoryService.deleteCategory(cat._id).subscribe({
+      next: () => {
+        this.categories.set(
+          this.categories().filter(c => c._id !== cat._id)
+        );
+        this.deleteTarget.set(null);
+      },
+      error: (err) => {
+        console.error('Delete failed:', err);
+        this.deleteTarget.set(null);
+      }
+    });
+  }
+
+  // Computed: total pages
+  totalPages = computed(() => {
+    const total = this.categories().length;
+    return Math.max(1, Math.ceil(total / this.pageSize));
+  });
+
+  // Computed: paginated categories for current page
+  paginatedCategories = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.categories().slice(start, end);
+  });
+
+  // Go to page
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages()) return;
+    this.currentPage.set(page);
+  }
+
+  // For Next button
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(v => v + 1);
+    }
+  }
+
+  // For Prev button
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(v => v - 1);
+    }
   }
 }

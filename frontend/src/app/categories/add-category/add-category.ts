@@ -83,7 +83,7 @@ export class AddCategory implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/categories']);
+    this.router.navigate(['/dashboard']);
   }
 
   logout(): void {

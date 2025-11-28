@@ -1,0 +1,9 @@
+/* remove arrows from number input */
+.custom-number::-webkit-inner-spin-button,
+.custom-number::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.custom-number {
+  -moz-appearance: textfield;
+}

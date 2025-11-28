@@ -1,0 +1,195 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+  <!-- Header/Navbar -->
+  <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">₹</span>
+          </div>
+          <h1 class="text-2xl font-bold text-white">FinTrack</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button (click)="logout()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-medium">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Welcome Section -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">Welcome back, User!</h2>
+      <p class="text-gray-400">Here's your financial overview for this month</p>
+    </div>
+
+    <!-- Financial Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Income Card -->
+      <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-gray-400 font-medium">Total Income</h3>
+          <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-white">₹{{ financialSummary.totalIncome | number }}</p>
+        <p class="text-green-500 text-sm mt-2">+12% from last month</p>
+      </div>
+
+      <!-- Total Expense Card -->
+      <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-red-500 transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-gray-400 font-medium">Total Expense</h3>
+          <div class="w-12 h-12 bg-red-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-white">₹{{ financialSummary.totalExpense | number }}</p>
+        <p class="text-red-500 text-sm mt-2">+5% from last month</p>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-purple-500 transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-gray-400 font-medium">Balance</h3>
+          <div class="w-12 h-12 bg-purple-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-white">₹{{ financialSummary.balance | number }}</p>
+        <p class="text-purple-500 text-sm mt-2">Available balance</p>
+      </div>
+
+      <!-- Savings Rate Card -->
+      <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-yellow-500 transition">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-gray-400 font-medium">Savings Rate</h3>
+          <div class="w-12 h-12 bg-yellow-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-white">{{ financialSummary.savingsRate }}%</p>
+        <p class="text-yellow-500 text-sm mt-2">Great job! Keep it up</p>
+      </div>
+    </div>
+
+    <!-- Charts and Transactions Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Expense Breakdown -->
+      <div class="lg:col-span-2 bg-gray-800 rounded-2xl p-6 border border-gray-700">
+        <h3 class="text-xl font-bold text-white mb-6">Expense Breakdown</h3>
+        <div class="space-y-4">
+          <div *ngFor="let category of expenseCategories" class="flex items-center">
+            <div class="flex-1">
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-300 font-medium">{{ category.name }}</span>
+                <span class="text-white font-bold">₹{{ category.amount | number }}</span>
+              </div>
+              <div class="w-full bg-gray-700 rounded-full h-2">
+                <div 
+                  class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all"
+                  [style.width.%]="category.percentage">
+                </div>
+              </div>
+              <span class="text-gray-500 text-xs mt-1">{{ category.percentage }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+
+      <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+        <h3 class="text-xl font-bold text-white mb-6">Quick Actions</h3>
+
+        <div class="space-y-3">
+
+          <!-- Add Transaction -->
+          <button 
+            (click)="navigateTo('/add-transaction')"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span>Add Transaction</span>
+          </button>
+
+          <!-- Add Category -->
+          <button
+            (click)="navigateTo('/add-category')"
+            class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 rounded-lg transition flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span>Add Category</span>
+          </button>
+
+          <!-- View All Transactions -->
+          <button 
+            (click)="navigateTo('/transactions')"
+            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"></path>
+            </svg>
+            <span>View All Transactions</span>
+          </button>
+
+          <!-- View All Categories -->
+          <button 
+            (click)="navigateTo('/categories')"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <span>View All Categories</span>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
+        <a routerLink="/transactions" class="text-blue-500 hover:text-blue-400 font-medium transition">View All →</a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="text-left py-3 px-4 text-gray-400 font-medium">Description</th>
+              <th class="text-left py-3 px-4 text-gray-400 font-medium">Category</th>
+              <th class="text-left py-3 px-4 text-gray-400 font-medium">Date</th>
+              <th class="text-right py-3 px-4 text-gray-400 font-medium">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transaction of recentTransactions" class="border-b border-gray-700 hover:bg-gray-700 bg-opacity-50 transition">
+              <td class="py-4 px-4 text-white font-medium">{{ transaction.description }}</td>
+              <td class="py-4 px-4 text-gray-300">{{ transaction.category }}</td>
+              <td class="py-4 px-4 text-gray-400">{{ transaction.date }}</td>
+              <td class="py-4 px-4 text-right font-bold" [ngClass]="transaction.type === 'income' ? 'text-green-500' : 'text-red-500'">
+                {{ transaction.type === 'income' ? '+' : '-' }}₹{{ transaction.amount | number }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

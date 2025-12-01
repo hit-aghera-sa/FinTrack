@@ -1,31 +1,32 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth';
+import { firstValueFrom } from 'rxjs';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  const auth = inject(AuthService);
+export const authGuard = async (): Promise<boolean | UrlTree> => {
   const router = inject(Router);
+  const auth = inject(AuthService);
+  const platformId = inject(PLATFORM_ID);
 
-  return new Promise(resolve => {
-    let tries = 0;
+  const isBrowser = isPlatformBrowser(platformId);
 
-    const check = () => {
-      tries++;
+  try {
+    const res: any = isBrowser
+      ? await firstValueFrom(auth.checkSession())
+      : null;
 
-      // cookies/localStorage restored?
-      if (auth.isAuthenticated()) {
-        resolve(true);
-        return;
-      }
+    if (res?.status === 'success') {
+      if (isBrowser) localStorage.setItem('isAuthenticated', 'true');
+      return true;
+    }
 
-      if (tries >= 10) {
-        resolve(router.createUrlTree(['/login']));
-        return;
-      }
+    if (isBrowser) localStorage.removeItem('isAuthenticated');
+    return router.createUrlTree(['/login']);
 
-      setTimeout(check, 100);
-    };
-
-    check();
-  });
+  } catch {
+    if (isBrowser) localStorage.removeItem('isAuthenticated');
+    return router.createUrlTree(['/login']);
+  }
 };

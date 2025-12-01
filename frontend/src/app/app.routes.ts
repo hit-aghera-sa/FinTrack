@@ -1,71 +1,62 @@
-import { inject } from '@angular/core';
 import { Routes, Router, UrlTree } from '@angular/router';
-import { Signup } from './auth/signup/signup';
-import { Login } from './auth/login/login';
-import { ForgotPassword } from './auth/forgot-password/forgot-password';
-import { Dashboard } from './dashboard/dashboard';
+import { inject } from '@angular/core';
+
 import { authGuard } from './core/guards/auth.guard';
 import { AuthService } from './core/services/auth';
 
-export const routes: Routes = [
-  { path: '', redirectTo: 'signup', pathMatch: 'full' },
+function redirectIfLoggedIn(): boolean | UrlTree {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-  // LOGIN
+  if (!auth.isAuthenticated()) return true;
+
+  return router.createUrlTree(['/dashboard']);
+}
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
   {
     path: 'login',
-    component: Login,
-    canActivate: [
-      (): boolean | UrlTree => {
-        const auth = inject(AuthService);
-        const router = inject(Router);
-        return auth.isAuthenticated()
-          ? router.createUrlTree(['/dashboard'])
-          : true;
-      }
-    ]
+    loadComponent: () =>
+      import('./auth/login/login').then(m => m.LoginComponent),
+    canActivate: [redirectIfLoggedIn]
   },
 
-  // SIGNUP
   {
     path: 'signup',
-    component: Signup,
-    canActivate: [
-      (): boolean | UrlTree => {
-        const auth = inject(AuthService);
-        const router = inject(Router);
-        return auth.isAuthenticated()
-          ? router.createUrlTree(['/dashboard'])
-          : true;
-      }
-    ]
+    loadComponent: () =>
+      import('./auth/signup/signup').then(m => m.Signup),
+    canActivate: [redirectIfLoggedIn]
   },
 
-  { path: 'forgot-password', component: ForgotPassword },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./auth/forgot-password/forgot-password').then(m => m.ForgotPassword)
+  },
 
-  // DASHBOARD
   {
     path: 'dashboard',
-    component: Dashboard,
+    loadComponent: () =>
+      import('./dashboard/dashboard').then(m => m.Dashboard),
     canActivate: [authGuard]
   },
 
-  // ALL CATEGORIES PAGE
   {
     path: 'categories',
-    canActivate: [authGuard],
     loadComponent: () =>
-      import('./categories/categories').then(m => m.CategoriesPage)
+      import('./categories/categories').then(m => m.CategoriesPage),
+    canActivate: [authGuard]
   },
 
-  // ADD CATEGORY PAGE
   {
     path: 'add-category',
-    canActivate: [authGuard],
     loadComponent: () =>
-      import('./categories/add-category/add-category').then(m => m.AddCategory)
+      import('./categories/add-category/add-category').then(m => m.AddCategory),
+    canActivate: [authGuard]
   },
 
-  // EDIT CATEGORY
   {
     path: 'edit-category/:id',
     loadComponent: () =>
@@ -73,32 +64,26 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  // ALL TRANSACTIONS PAGE
   {
     path: 'transactions',
-    canActivate: [authGuard],
     loadComponent: () =>
-      import('./transactions/transactions').then(m => m.TransactionsPage)
+      import('./transactions/transactions').then(m => m.TransactionsPage),
+    canActivate: [authGuard]
   },
 
-  // ADD TRANSACTION PAGE
   {
     path: 'add-transaction',
     loadComponent: () =>
-      import('./transactions/add-transaction/add-transaction')
-        .then(m => m.AddTransaction),
+      import('./transactions/add-transaction/add-transaction').then(m => m.AddTransaction),
     canActivate: [authGuard]
   },
 
-  // EDIT TRANSACTION PAGE
   {
     path: 'edit-transaction/:id',
     loadComponent: () =>
-      import('./transactions/edit-transaction/edit-transaction')
-        .then(m => m.EditTransaction),
+      import('./transactions/edit-transaction/edit-transaction').then(m => m.EditTransaction),
     canActivate: [authGuard]
   },
 
-  // FALLBACK
-  { path: '**', redirectTo: 'signup' }
+  { path: '**', redirectTo: 'login' }
 ];

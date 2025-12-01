@@ -66,13 +66,13 @@ UserSchema.pre('save', async function(next){
     next()                  //never forget next() while using pre - post middleware
 });
 
-UserSchema.pre('save', async function(next){
-    // if password not modified or new document not created
-    if(!this.isModified("password") || this.isNew) return next()
+UserSchema.pre('save', async function(next) {
+  // if password not modified or new document not created
+  if (!this.isModified("password") || this.isNew) return next();
+  this.passwordChangedAt = Date.now();
+  next();
+});
 
-    this.passwordChangedAt = Date.now() - 1000;
-    next()
-})
 
 UserSchema.pre(/^find/, async function(next){
     this.find({active: {$ne: false}});
@@ -85,16 +85,14 @@ UserSchema.methods.comparePassword = async function(clientPassword, hashedPasswo
 }
 
 // check password changed after login
-UserSchema.methods.isPasswordChange = async function(loginTime){
-    
-    if (this.passwordChangedAt){
-        const convertedDate = parseInt(
-            this.passwordChangedAt.getTime() / 1000
-        , 10)
-        return loginTime < convertedDate;
-    }   
-    return false;
+UserSchema.methods.isPasswordChange = function(jwtIssuedAt) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
+    return jwtIssuedAt < changedTimestamp;
+  }
+  return false;
 }
+
 
 UserSchema.methods.createResetToken = async function(){
     const resetToken = crypto.randomBytes(32).toString('hex');

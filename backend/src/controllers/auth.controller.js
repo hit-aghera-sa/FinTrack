@@ -14,8 +14,9 @@ const sendToken = (user, statusCode, res) => {
 
   res.cookie("jwt_cookie", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // auto secure in prod
-    sameSite: "lax",
+    secure: false,        // because using http://localhost
+    sameSite: "lax",      // IMPORTANT: use LAX in development
+    path: "/",            // explicit path
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
   });
 
@@ -59,7 +60,6 @@ const login = catchAsync( async (req, res, next) => {
     }
     sendToken(user, 200, res);
 })
-
 
 const forgotPassword = catchAsync( async (req, res, next) => {
     const email = req.body?.email;

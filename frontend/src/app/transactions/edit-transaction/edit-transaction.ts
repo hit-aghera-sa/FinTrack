@@ -16,7 +16,6 @@ import { TransactionService } from '../../core/services/transaction';
 export class EditTransaction implements OnInit {
 
   // signals
-  private _title = signal('');
   private _amount = signal<number | null>(null);
   private _type = signal<'income' | 'expense'>('expense');
   private _categoryId = signal('');
@@ -29,8 +28,6 @@ export class EditTransaction implements OnInit {
   transactionId: string = '';
 
   // ========== GETTERS / SETTERS ==========
-  get title() { return this._title(); }
-  set title(v) { this._title.set(v); }
 
   get amount() { return this._amount(); }
   set amount(v) { this._amount.set(v); }
@@ -101,7 +98,6 @@ export class EditTransaction implements OnInit {
         const tx = res.data.find((t: any) => t._id === this.transactionId);
         if (!tx) return;
 
-        this.title = tx.title;
         this.amount = tx.amount;
         this.type = tx.type;
         this.categoryId = tx.categoryId;
@@ -116,10 +112,6 @@ export class EditTransaction implements OnInit {
   submit(): void {
     this.errorMessage = null;
 
-    if (!this.title.trim()) {
-      this.errorMessage = 'Title is required';
-      return;
-    }
     if (!this.amount || this.amount <= 0) {
       this.errorMessage = 'Amount must be greater than zero';
       return;
@@ -130,12 +122,11 @@ export class EditTransaction implements OnInit {
     }
 
     const payload = {
-      title: this.title.trim(),
       amount: this.amount,
       type: this.type,
       categoryId: this.categoryId,
       date: this.date,
-      note: this.note.trim()
+      description: this.note.trim()
     };
 
     this.transactionService.updateTransaction(this.transactionId, payload).subscribe({

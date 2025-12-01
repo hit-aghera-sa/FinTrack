@@ -1,70 +1,70 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { CommonModule } from '@angular/common';
+import { finalize, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './login.html',
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './login.html'
 })
-export class Login {
-
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
-  errorMessage = "";
+  errorMessage: string | null = null;
+  private isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) 
-  {
+    private auth: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required]]
     });
   }
 
-  submit() {
+  ngOnInit(): void {
+    if (typeof window !== 'undefined' && this.auth.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
+
+  submit(): void {
+    if (this.isSubmitting) return;
     if (this.loginForm.invalid) {
-      this.errorMessage = "Please fill in all fields correctly";
+      this.errorMessage = 'Please enter valid email and password';
       return;
     }
 
+    this.errorMessage = null;
+    this.isSubmitting = true;
     this.loading = true;
-    this.errorMessage = "";
 
-    const loginData = this.loginForm.value;
-    console.log("Sending login request...");
+    const payload = this.loginForm.value;
 
-    this.authService.login(loginData).subscribe({
-      next: (response) => {
-        console.log("Login successful:", response);
-
-        // Save authentication flag
-        localStorage.setItem("isAuthenticated", "true");
-
-        this.loading = false;
-
-        // Redirect to dashboard
-        this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        console.error("Login failed:", error);
-
-        this.loading = false;
-
-        if (error.status === 401) {
-          this.errorMessage = "Incorrect email or password";
-        } else {
-          this.errorMessage = "Something went wrong. Please try again.";
+    this.auth.login(payload)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loading = false;
+          this.isSubmitting = false;
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          localStorage.setItem('isAuthenticated', 'true');
+          this.auth.saveUser(res.data);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          this.errorMessage = err?.error?.message || 'Login failed';
         }
-      }
-    });
+      });
   }
-
 }

@@ -41,9 +41,9 @@ export class CategoryService {
 
   // Deactivate category
   deleteCategory(id: string): Observable<any> {
-  return this.http.patch(`${this.api}/${id}`, { active: false }, {
-    withCredentials: true
-  });
-}
+    return this.http.delete(`${this.api}/${id}`, {
+      withCredentials: true
+    });
+  }
 
 }

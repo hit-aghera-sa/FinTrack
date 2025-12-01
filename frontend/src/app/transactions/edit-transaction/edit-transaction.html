@@ -35,19 +35,6 @@
 
       <form (ngSubmit)="submit()" class="space-y-4">
 
-        <!-- Title -->
-        <div>
-          <label class="text-gray-300 block mb-1 text-sm font-medium">Title</label>
-          <input
-            type="text"
-            [(ngModel)]="title"
-            name="title"
-            class="w-full p-3 rounded-xl bg-gray-700 text-white border outline-none text-sm"
-            [class.border-red-500]="errorMessage"
-            placeholder="e.g. Grocery, Salary"
-          />
-        </div>
-
         <!-- Amount -->
         <div>
           <label class="text-gray-300 block mb-1 text-sm font-medium">Amount</label>

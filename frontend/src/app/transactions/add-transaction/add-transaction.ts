@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-transaction',
@@ -15,8 +16,6 @@ import { TransactionService } from '../../core/services/transaction';
 })
 export class AddTransaction implements OnInit {
 
-  // signals
-  private _title = signal('');
   private _amount = signal<number | null>(null);
   private _type = signal<'income' | 'expense'>('expense');
   private _categoryId = signal('');
@@ -24,8 +23,7 @@ export class AddTransaction implements OnInit {
   private _note = signal('');
   private _errorMessage = signal<string | null>(null);
 
-  get title() { return this._title(); }
-  set title(v) { this._title.set(v); }
+  selectedFiles: File[] = [];
 
   get amount() { return this._amount(); }
   set amount(v) { this._amount.set(v); }
@@ -48,7 +46,7 @@ export class AddTransaction implements OnInit {
   categories = signal<any[]>([]);
   loading = signal(true);
 
-  // 🔥 Filter categories based on selected type
+  // Filter categories by income/expense
   filteredCategories = computed(() =>
     this.categories().filter(cat => cat.type === this.type)
   );
@@ -57,19 +55,19 @@ export class AddTransaction implements OnInit {
     private authService: AuthService,
     private router: Router,
     private categoryService: CategoryService,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private http: HttpClient
   ) {
 
-    // 🔥 When type changes, clear category if it doesn’t match the new type
+    // Reset category if type changes
     effect(() => {
       const cats = this.filteredCategories();
       const selected = this.categoryId;
 
       if (!cats.find(c => c._id === selected)) {
-        this._categoryId.set(''); // reset selection
+        this._categoryId.set('');
       }
     });
-
   }
 
   ngOnInit(): void {
@@ -103,13 +101,21 @@ export class AddTransaction implements OnInit {
     });
   }
 
+  onFilesSelected(event: any) {
+    const files: FileList = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      if (this.selectedFiles.length >= 5) break;
+      this.selectedFiles.push(files[i]);
+    }
+  }
+
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
+  }
+
   submit(): void {
     this.errorMessage = null;
-
-    if (!this.title.trim()) {
-      this.errorMessage = 'Title is required';
-      return;
-    }
 
     if (!this.amount || this.amount <= 0) {
       this.errorMessage = 'Amount must be greater than zero';
@@ -122,16 +128,34 @@ export class AddTransaction implements OnInit {
     }
 
     const payload = {
-      title: this.title.trim(),
       amount: this.amount,
-      type: this.type,
       categoryId: this.categoryId,
       date: this.date,
-      note: this.note.trim()
+      description: this.note.trim()
     };
 
     this.transactionService.createTransaction(payload).subscribe({
-      next: () => this.router.navigate(['/transactions']),
+      next: (res) => {
+        const transactionId = res.data._id;
+
+        if (this.selectedFiles.length === 0) {
+          this.router.navigate(['/transactions']);
+          return;
+        }
+
+        const formData = new FormData();
+        this.selectedFiles.forEach(f => formData.append("files", f));
+
+        this.http.post(
+          `http://localhost:5001/api/attachment/transaction/${transactionId}`,
+          formData,
+          { withCredentials: true }
+        ).subscribe({
+          next: () => this.router.navigate(['/transactions']),
+          error: () => this.router.navigate(['/transactions'])
+        });
+      },
+
       error: (err) => {
         this.errorMessage = err?.error?.message || 'Something went wrong.';
       }

@@ -7,6 +7,12 @@ const {signupLimiter, loginLimiter, forgotLimiter} = require("../utils/rateLimit
 const router = express.Router();
 
 router    
+    .get('/me', (req, res) => {
+      res.status(200).json({
+        status: "success",
+        user: req.user
+      });
+    })
     .post("/signup", signupLimiter, signUp)
     .post("/login", loginLimiter, login)
     .post("/forgot-password", forgotLimiter,forgotPassword)

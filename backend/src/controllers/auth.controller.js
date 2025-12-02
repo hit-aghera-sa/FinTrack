@@ -12,13 +12,13 @@ const createToken = (payload) => {
 const sendToken = (user, statusCode, res) => {
   const token = createToken({ id: user._id });
 
-  res.cookie("jwt_cookie", token, {
+    res.cookie("jwt", token, {
     httpOnly: true,
-    secure: false,        // because using http://localhost
-    sameSite: "lax",      // IMPORTANT: use LAX in development
-    path: "/",            // explicit path
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-  });
+    secure: true,
+    sameSite: "none",
+    expires: new Date(Date.now() + 90*24*60*60*1000)
+    });
+
 
   user.password = undefined;
 
@@ -71,7 +71,8 @@ const forgotPassword = catchAsync( async (req, res, next) => {
     const resetToken = await findUser.createResetToken();
     await findUser.save({ validateBeforeSave: false });
 
-    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/user/resetPassword/${resetToken}`;
+    // const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/user/resetPassword/${resetToken}`;
+    const resetPasswordUrl = `http://localhost:4200/reset-password/${resetToken}`;
     const message = `forgot password? submit patch request with password and confirmPassword on ${resetPasswordUrl}\n if you didn't forgot password then ignore this mail`;
 
     try{

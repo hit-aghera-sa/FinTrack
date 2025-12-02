@@ -7,8 +7,8 @@ const protect = catchAsync(async (req, res, next) => {
   let token;
 
   // 1) Check cookie first
-  if (req.cookies.jwt_cookie) {
-    token = req.cookies.jwt_cookie;
+  if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   // 2) Fallback: Authorization header

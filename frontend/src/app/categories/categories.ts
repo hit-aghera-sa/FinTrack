@@ -63,12 +63,12 @@ export class CategoriesPage implements OnInit {
     this.authService.logout();
   }
 
-  /** EDIT CATEGORY */
+  // edit category
   editCategory(cat: any): void {
     this.router.navigate(['/edit-category', cat._id]);
   }
 
-  /** DELETE CATEGORY MODAL */
+  // delete category modal
   openDelete(cat: any): void {
     this.deleteTarget.set(cat);
   }

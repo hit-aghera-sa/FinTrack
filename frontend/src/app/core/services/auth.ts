@@ -6,7 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private api = 'http://localhost:5001/api/user';
+  private api = 'http://localhost:5001/api/user';   // BASE ROUTE
   private isBrowser: boolean;
 
   constructor(
@@ -46,6 +46,10 @@ export class AuthService {
 
   forgotPassword(email: string) {
     return this.http.post(`${this.api}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, passwords: any) {
+    return this.http.patch(`${this.api}/reset-password/${token}`, passwords);
   }
 
   checkSession() {

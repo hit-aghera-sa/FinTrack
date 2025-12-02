@@ -14,8 +14,10 @@ function redirectIfLoggedIn(): boolean | UrlTree {
 }
 
 export const routes: Routes = [
+  // Default route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
+  // LOGIN
   {
     path: 'login',
     loadComponent: () =>
@@ -23,6 +25,7 @@ export const routes: Routes = [
     canActivate: [redirectIfLoggedIn]
   },
 
+  // SIGNUP
   {
     path: 'signup',
     loadComponent: () =>
@@ -30,12 +33,14 @@ export const routes: Routes = [
     canActivate: [redirectIfLoggedIn]
   },
 
+  // FORGOT PASSWORD
   {
     path: 'forgot-password',
     loadComponent: () =>
       import('./auth/forgot-password/forgot-password').then(m => m.ForgotPassword)
   },
 
+  // DASHBOARD
   {
     path: 'dashboard',
     loadComponent: () =>
@@ -43,6 +48,7 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  // CATEGORIES
   {
     path: 'categories',
     loadComponent: () =>
@@ -85,5 +91,12 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  {
+    path: 'reset-password/:token',
+    loadComponent: () =>
+      import('./auth/reset-password/reset-password').then(m => m.ResetPassword)
+  },
+
+  // CATCH-ALL
   { path: '**', redirectTo: 'login' }
 ];

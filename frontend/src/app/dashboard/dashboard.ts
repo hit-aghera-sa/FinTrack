@@ -1,14 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/services/auth';
 import { CategoryService } from '../core/services/category';
 import { TransactionService } from '../core/services/transaction';
+import { NavbarComponent } from '../shared/navbar/navbar';
+
+interface Transaction {
+  amount: number;
+  type: string;
+  category: string;
+  date: string;
+  description?: string;
+}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NavbarComponent],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -20,50 +29,38 @@ export class Dashboard implements OnInit {
     balance: 0,
     savingsRate: 0
   };
-
+  dataLoaded = false; // Flag to prevent multiple loads
   categories: any[] = [];
-  recentTransactions: any[] = [];
+  recentTransactions: Transaction[] = [];
   expenseCategories: any[] = [];
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private categoryService: CategoryService,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    console.log("Dashboard init → waiting for session...");
     this.waitForAuthAndLoad();
   }
 
-  /**
-   * Fix: wait for cookies to be restored after a hard refresh.
-   * Angular hydration takes 50–150ms before document.cookie becomes readable.
-   */
-  waitForAuthAndLoad(): void {
-    let attempts = 0;
-    const maxAttempts = 10; // 10 × 100ms = 1 second max wait
-
-    const check = () => {
-      attempts++;
-
-      if (this.authService.isAuthenticated()) {
-        // Cookies available → load dashboard
+  // 🔥 FIX: Wait until session is confirmed before loading ANY data
+  waitForAuthAndLoad() {
+    this.authService.checkSession().subscribe({
+      next: () => {
+        console.log("Session OK → loading dashboard...");
+        localStorage.setItem('isAuthenticated', 'true');
         this.loadDashboardData();
-        return;
-      }
-
-      if (attempts >= maxAttempts) {
-        // Still not authenticated → redirect to login
+      },
+      error: () => {
+        console.log("Session FAIL → redirect login");
+        localStorage.removeItem('isAuthenticated');
         this.router.navigate(['/login']);
-        return;
       }
-
-      // Try again in 100ms
-      setTimeout(check, 100);
-    };
-
-    check();
+    });
   }
 
   loadDashboardData(): void {
@@ -71,34 +68,41 @@ export class Dashboard implements OnInit {
     this.loadTransactions();
   }
 
-  // Fetch user categories
   loadCategories(): void {
     this.categoryService.getMyCategories().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.categories = res.data || [];
-      },
-      error: (err) => console.error("Category fetch error:", err)
+      }
     });
   }
 
-  // Fetch user transactions + generate summary
   loadTransactions(): void {
+    if (this.dataLoaded) return; // Prevent multiple loads
+    
     this.transactionService.getMyTransactions().subscribe({
-      next: (res) => {
-        const tx = res.data || [];
+      next: (res: any) => {
+        console.log('API Response:', res);
+        let tx: Transaction[] = [];
+
+        if (Array.isArray(res)) {
+          tx = res;
+        } else if (res?.data) {
+          tx = Array.isArray(res.data) ? res.data : [];
+        }
 
         this.recentTransactions = tx.slice(0, 5);
 
         const income = tx
-          .filter((t: any) => t.type === 'income')
-          .reduce((sum: any, t: any) => sum + t.amount, 0);
+          .filter((t: Transaction) => t.type === 'income')
+          .reduce((sum: number, t: Transaction) => sum + (Number(t.amount) || 0), 0);
 
         const expense = tx
-          .filter((t: any) => t.type === 'expense')
-          .reduce((sum: any, t: any) => sum + t.amount, 0);
+          .filter((t: Transaction) => t.type === 'expense')
+          .reduce((sum: number, t: Transaction) => sum + (Number(t.amount) || 0), 0);
 
         const balance = income - expense;
 
+        // Create a new object reference to trigger change detection
         this.financialSummary = {
           totalIncome: income,
           totalExpense: expense,
@@ -107,36 +111,48 @@ export class Dashboard implements OnInit {
         };
 
         this.expenseCategories = this.buildExpenseBreakdown(tx);
+        this.dataLoaded = true; // Mark as loaded
+        
+        // Manually trigger change detection
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error("Transaction fetch error:", err)
+
+      error: (error) => {
+        console.error('Error loading transactions:', error);
+        // Set default values on error
+        this.financialSummary = {
+          totalIncome: 0,
+          totalExpense: 0,
+          balance: 0,
+          savingsRate: 0
+        };
+        this.dataLoaded = true;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  buildExpenseBreakdown(tx: any[]): any[] {
+  buildExpenseBreakdown(tx: Transaction[]) {
     const expenses = tx.filter(t => t.type === 'expense');
+    const totals: Record<string, number> = {};
 
-    const totals: any = {};
+    for (const t of expenses) {
+      const cat = t.category || 'Uncategorized';
+      totals[cat] = (totals[cat] || 0) + Number(t.amount);
+    }
 
-    expenses.forEach(t => {
-      if (!totals[t.category]) totals[t.category] = 0;
-      totals[t.category] += t.amount;
-    });
-
-    const totalExpense = Object.values(totals)
-      .reduce((a: any, b: any) => a + b, 0);
+    const totalExpense = Object.values(totals).reduce((a, b) => a + b, 0);
 
     return Object.keys(totals).map(c => ({
       name: c,
       amount: totals[c],
-      percentage: totalExpense ? Math.round((totals[c] / Number(totalExpense)) * 100) : 0
+      percentage: totalExpense > 0
+        ? Math.round((totals[c] / totalExpense) * 100)
+        : 0
     }));
   }
 
-  logout(): void {
-    this.authService.logout();
-  }
-
-  navigateTo(path: string): void {
+  navigateTo(path: string) {
     this.router.navigate([path]);
   }
 }

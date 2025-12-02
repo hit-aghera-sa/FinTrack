@@ -40,29 +40,25 @@ export class ForgotPassword {
     this.successMessage = "";
 
     const email = this.forgotPasswordForm.get('email')?.value;
+
     this.authService.forgotPassword(email).subscribe({
-      next: (response: any) => {
+      next: (res: any) => {
         this.loading = false;
-        this.successMessage = response.message || "Password reset link has been sent to your email";
+        this.successMessage = res.message || "Reset link sent to your email";
+
         this.forgotPasswordForm.reset();
-        // Optionally redirect to login after 3 seconds
+
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 3000);
       },
-      error: (err: any) => {
+      error: (err) => {
         this.loading = false;
-        // Extract error message from different possible response structures
-        if (err.error?.message) {
-          this.errorMessage = err.error.message;
-        } else if (err.error?.error?.message) {
-          this.errorMessage = err.error.error.message;
-        } else if (typeof err.error === 'string') {
-          this.errorMessage = err.error;
-        } else {
-          this.errorMessage = err.statusText || "Failed to send reset link";
-        }
-        // Trigger change detection to update the UI
+
+        if (err.error?.message) this.errorMessage = err.error.message;
+        else if (typeof err.error === 'string') this.errorMessage = err.error;
+        else this.errorMessage = "Failed to send reset link";
+
         this.cdr.detectChanges();
       }
     });

@@ -12,21 +12,23 @@ export const authGuard = async (): Promise<boolean | UrlTree> => {
 
   const isBrowser = isPlatformBrowser(platformId);
 
-  try {
-    const res: any = isBrowser
-      ? await firstValueFrom(auth.checkSession())
-      : null;
+  // ONLY run checkSession if localStorage shows user already logged in
+  if (isBrowser && localStorage.getItem('isAuthenticated') === 'true') {
+    try {
+      const res: any = await firstValueFrom(auth.checkSession());
 
-    if (res?.status === 'success') {
-      if (isBrowser) localStorage.setItem('isAuthenticated', 'true');
-      return true;
+      if (res?.status === 'success') {
+        return true; // allow dashboard access
+      } else {
+        localStorage.removeItem('isAuthenticated');
+        return router.createUrlTree(['/login']);
+      }
+    } catch {
+      localStorage.removeItem('isAuthenticated');
+      return router.createUrlTree(['/login']);
     }
-
-    if (isBrowser) localStorage.removeItem('isAuthenticated');
-    return router.createUrlTree(['/login']);
-
-  } catch {
-    if (isBrowser) localStorage.removeItem('isAuthenticated');
-    return router.createUrlTree(['/login']);
   }
+
+  // User NOT authenticated locally → block dashboard access
+  return router.createUrlTree(['/login']);
 };

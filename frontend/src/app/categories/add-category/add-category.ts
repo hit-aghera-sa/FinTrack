@@ -1,9 +1,12 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CategoryService } from '../../core/services/category';
 import { AuthService } from '../../core/services/auth';
+import { LoggingService } from '../../core/services/logging.service';
 
 @Component({
   selector: 'app-add-category',
@@ -12,7 +15,7 @@ import { AuthService } from '../../core/services/auth';
   templateUrl: './add-category.html',
   styleUrls: ['./add-category.css']
 })
-export class AddCategory implements OnInit {
+export class AddCategory implements OnInit, OnDestroy {
 
   // signals
   private _name = signal('');
@@ -29,10 +32,15 @@ export class AddCategory implements OnInit {
   get errorMessage() { return this._errorMessage(); }
   set errorMessage(val: string | null) { this._errorMessage.set(val); }
 
+  private destroy$ = new Subject<void>();
+  private readonly maxAuthCheckAttempts = 10;
+  private readonly checkIntervalMs = 120;
+
   constructor(
     private categoryService: CategoryService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private loggingService: LoggingService
   ) {}
 
   ngOnInit(): void {
@@ -41,29 +49,35 @@ export class AddCategory implements OnInit {
 
   waitForAuth(): void {
     let attempts = 0;
-
-    const check = (): void => {
-      attempts++;
-
-      if (this.authService.isAuthenticated()) {
-        return void 0;
-      }
-
-      if (attempts >= 10) {
-        this.router.navigate(['/login']);
-        return void 0;
-      }
-
-      setTimeout(check, 120);
-      return void 0;
-    };
-    check();
+    
+    timer(0, this.checkIntervalMs)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (this.authService.isAuthenticated()) {
+            return;
+          }
+          
+          attempts++;
+          if (attempts >= this.maxAuthCheckAttempts) {
+            this.router.navigate(['/login']);
+          }
+        },
+        error: (err) => {
+          this.loggingService.error('Error in auth check', err);
+          this.router.navigate(['/login']);
+        }
+      });
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
   submit(): void {
     this.errorMessage = null;
-
     if (!this.name.trim()) {
       this.errorMessage = 'Category name is required';
       return;

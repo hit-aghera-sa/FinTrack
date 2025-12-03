@@ -1,10 +1,13 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
+import { Subject, timer } from 'rxjs';
+import { takeUntil, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
+import { LoggingService } from '../../core/services/logging.service';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -13,7 +16,7 @@ import { TransactionService } from '../../core/services/transaction';
   templateUrl: './edit-transaction.html',
   styleUrls: ['./edit-transaction.css']
 })
-export class EditTransaction implements OnInit {
+export class EditTransaction implements OnInit, OnDestroy {
 
   // signals
   private _amount = signal<number | null>(null);
@@ -51,13 +54,19 @@ export class EditTransaction implements OnInit {
     this.categories().filter(cat => cat.type === this.type)
   );
 
-  constructor(
-    private route: ActivatedRoute,
-    private authService: AuthService,
-    private router: Router,
-    private categoryService: CategoryService,
-    private transactionService: TransactionService
-  ) {}
+  private destroy$ = new Subject<void>();
+  private readonly maxAuthCheckAttempts = 10;
+  private readonly checkIntervalMs = 120;
+  
+  // Inject services
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private categoryService = inject(CategoryService);
+  private transactionService = inject(TransactionService);
+  private loggingService = inject(LoggingService);
+
+  constructor() {}
 
   ngOnInit(): void {
     this.waitForAuth();
@@ -67,21 +76,33 @@ export class EditTransaction implements OnInit {
     this.loadTransaction();
   }
 
-  // Wait for Auth
+  // Wait for Auth using RxJS timer
   waitForAuth(): void {
     let attempts = 0;
-    const check = () => {
-      attempts++;
-      if (this.authService.isAuthenticated()) return;
-
-      if (attempts >= 10) {
-        this.router.navigate(['/login']);
-        return;
-      }
-
-      setTimeout(check, 120);
-    };
-    check();
+    
+    timer(0, this.checkIntervalMs)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (this.authService.isAuthenticated()) {
+            return;
+          }
+          
+          attempts++;
+          if (attempts >= this.maxAuthCheckAttempts) {
+            this.router.navigate(['/login']);
+          }
+        },
+        error: (err) => {
+          this.loggingService.error('Error in auth check', err);
+          this.router.navigate(['/login']);
+        }
+      });
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadCategories(): void {

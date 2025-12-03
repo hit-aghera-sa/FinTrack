@@ -1,8 +1,11 @@
-import { Component, OnInit, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
+import { Subject, timer } from 'rxjs';
+import { takeUntil, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { LoggingService } from '../../core/services/logging.service';
 import { CategoryService } from '../../core/services/category';
 import { TransactionService } from '../../core/services/transaction';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './add-transaction.html',
   styleUrls: ['./add-transaction.css']
 })
-export class AddTransaction implements OnInit {
+export class AddTransaction implements OnInit, OnDestroy {
 
   private _amount = signal<number | null>(null);
   private _type = signal<'income' | 'expense'>('expense');
@@ -51,13 +54,19 @@ export class AddTransaction implements OnInit {
     this.categories().filter(cat => cat.type === this.type)
   );
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private categoryService: CategoryService,
-    private transactionService: TransactionService,
-    private http: HttpClient
-  ) {
+  private destroy$ = new Subject<void>();
+  private readonly maxAuthCheckAttempts = 10;
+  private readonly checkIntervalMs = 120;
+  
+  // Inject services
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private categoryService = inject(CategoryService);
+  private transactionService = inject(TransactionService);
+  private http = inject(HttpClient);
+  private loggingService = inject(LoggingService);
+
+  constructor() {
 
     // Reset category if type changes
     effect(() => {
@@ -77,18 +86,32 @@ export class AddTransaction implements OnInit {
 
   waitForAuth(): void {
     let attempts = 0;
-    const check = () => {
-      attempts++;
-      if (this.authService.isAuthenticated()) return;
-
-      if (attempts >= 10) {
-        this.router.navigate(['/login']);
-        return;
+    
+    timer(0, this.checkIntervalMs)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (this.authService.isAuthenticated()) {
+            return;
+          }
+          attempts++;
+          if (attempts >= this.maxAuthCheckAttempts) {
+            this.router.navigate(['/login']).catch(err => {
+              this.loggingService.error('Error navigating to login', err as Error);
+            });
+          }
+        },
+        error: (err: unknown) => {
+          this.loggingService.error('Error in auth check', err as Error);
+          this.router.navigate(['/login']).catch(err => {
+            this.loggingService.error('Error navigating to login', err as Error);
+          });
       }
-
-      setTimeout(check, 120);
-    };
-    check();
+    });
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   loadCategories(): void {
@@ -97,7 +120,10 @@ export class AddTransaction implements OnInit {
         this.categories.set(res.data || []);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err: unknown) => {
+        this.loggingService.error('Failed to load categories', err as Error);
+        this.loading.set(false);
+      }
     });
   }
 

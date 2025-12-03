@@ -1,15 +1,20 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Environment variables
+.env
+.env.*
+!.env.example
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Backend specific
+/backend/node_modules/
+/backend/uploads/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Frontend specific
+/frontend/node_modules/
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/bazel-out/
+/frontend/npm-debug.log
+/frontend/yarn-error.log
 
 # IDEs and editors
 .idea/
@@ -29,7 +34,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
+/frontend/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage

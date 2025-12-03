@@ -29,7 +29,8 @@ export class Dashboard implements OnInit {
     balance: 0,
     savingsRate: 0
   };
-  dataLoaded = false; // Flag to prevent multiple loads
+   // Flag to prevent multiple loads
+  dataLoaded = false;
   categories: any[] = [];
   recentTransactions: Transaction[] = [];
   expenseCategories: any[] = [];
@@ -47,7 +48,7 @@ export class Dashboard implements OnInit {
     this.waitForAuthAndLoad();
   }
 
-  // 🔥 FIX: Wait until session is confirmed before loading ANY data
+  // Wait until session is confirmed before loading any data
   waitForAuthAndLoad() {
     this.authService.checkSession().subscribe({
       next: () => {
@@ -77,7 +78,8 @@ export class Dashboard implements OnInit {
   }
 
   loadTransactions(): void {
-    if (this.dataLoaded) return; // Prevent multiple loads
+    // Prevent multiple loads
+    if (this.dataLoaded) return; 
     
     this.transactionService.getMyTransactions().subscribe({
       next: (res: any) => {

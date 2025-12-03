@@ -27,7 +27,7 @@ export class EditTransaction implements OnInit {
   loading = signal(true);
   transactionId: string = '';
 
-  // ========== GETTERS / SETTERS ==========
+  // getters / setters 
 
   get amount() { return this._amount(); }
   set amount(v) { this._amount.set(v); }

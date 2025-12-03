@@ -19,7 +19,7 @@ export class AddCategory implements OnInit {
   private _type = signal<'income' | 'expense'>('expense');
   private _errorMessage = signal<string | null>(null);
 
-  // GETTERS / SETTERS (prevents [Signal:null] issue)
+  // getters / setters
   get name() { return this._name(); }
   set name(val: string) { this._name.set(val); }
 
@@ -55,7 +55,7 @@ export class AddCategory implements OnInit {
       }
 
       setTimeout(check, 120);
-      return void 0;  // <-- fixes TS7030
+      return void 0;
     };
     check();
   }

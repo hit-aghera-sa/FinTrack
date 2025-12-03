@@ -2,12 +2,10 @@
   display: block;
 }
 
-/* Remove all transitions */
 * {
   transition: none !important;
 }
 
-/* Simple scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }

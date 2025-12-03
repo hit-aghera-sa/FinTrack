@@ -26,7 +26,5 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([credentialsInterceptor])
     ),
 
-    // ❗ Remove withEventReplay()
-    // provideClientHydration(),
   ]
 };

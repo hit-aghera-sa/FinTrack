@@ -1,25 +1,27 @@
-require("dotenv").config();
-const app = require("./src/app");
-const connectDB = require("./config/db");
+require('dotenv').config();
+const app = require('./src/app');
+const connectDB = require('./config/db');
+const logger = require('./src/utils/logger');
 
+// Connect to database
 connectDB();
 
 const port = process.env.PORT || 5001;
 
 const server = app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  logger.info(`Server running on port ${port}`);
 });
 
-// HANDLE UNCAUGHT EXCEPTIONS
-process.on("uncaughtException", (err) => {
-  console.error("UNCAUGHT EXCEPTION! Shutting down...");
-  console.error(err);
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  logger.error('UNCAUGHT EXCEPTION! Shutting down...');
+  logger.error(err.stack);
   process.exit(1);
 });
 
-// HANDLE UNHANDLED PROMISE REJECTIONS
-process.on("unhandledRejection", (err) => {
-  console.error("UNHANDLED REJECTION! Shutting down server...");
-  console.error(err);
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  logger.error('UNHANDLED REJECTION! Shutting down server...');
+  logger.error(err.stack || err);
   server.close(() => process.exit(1));
 });

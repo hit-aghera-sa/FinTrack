@@ -6,3 +6,6 @@
 {"level":"info","message":"MongoDB connected","service":"backend","timestamp":"2025-12-03 18:42:25"}
 {"level":"info","message":"MongoDB Connected: localhost","service":"backend","timestamp":"2025-12-03 18:42:25"}
 {"level":"warn","message":"MongoDB disconnected","service":"backend","timestamp":"2025-12-03 18:42:26"}
+{"level":"info","message":"Server running on port 5001","service":"backend","timestamp":"2025-12-03 19:08:10"}
+{"level":"info","message":"MongoDB connected","service":"backend","timestamp":"2025-12-03 19:08:10"}
+{"level":"info","message":"MongoDB Connected: localhost","service":"backend","timestamp":"2025-12-03 19:08:10"}

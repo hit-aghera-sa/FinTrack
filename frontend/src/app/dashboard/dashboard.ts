@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/services/auth';
 import { CategoryService } from '../core/services/category';
 import { TransactionService } from '../core/services/transaction';
+import { LoggingService } from '../core/services/logging.service';
 import { NavbarComponent } from '../shared/navbar/navbar';
 
 interface Transaction {
@@ -35,6 +36,8 @@ export class Dashboard implements OnInit {
   recentTransactions: Transaction[] = [];
   expenseCategories: any[] = [];
 
+  private loggingService = inject(LoggingService);
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -44,7 +47,7 @@ export class Dashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("Dashboard init → waiting for session...");
+    this.loggingService.info("Dashboard init → waiting for session...");
     this.waitForAuthAndLoad();
   }
 
@@ -52,12 +55,12 @@ export class Dashboard implements OnInit {
   waitForAuthAndLoad() {
     this.authService.checkSession().subscribe({
       next: () => {
-        console.log("Session OK → loading dashboard...");
+        this.loggingService.info("Session OK → loading dashboard...");
         localStorage.setItem('isAuthenticated', 'true');
         this.loadDashboardData();
       },
-      error: () => {
-        console.log("Session FAIL → redirect login");
+      error: (err: Error) => {
+        this.loggingService.warn("Session check failed, redirecting to login");
         localStorage.removeItem('isAuthenticated');
         this.router.navigate(['/login']);
       }
@@ -73,6 +76,9 @@ export class Dashboard implements OnInit {
     this.categoryService.getMyCategories().subscribe({
       next: (res: any) => {
         this.categories = res.data || [];
+      },
+      error: (err: Error) => {
+        this.loggingService.error('Failed to load categories', err);
       }
     });
   }
@@ -83,7 +89,7 @@ export class Dashboard implements OnInit {
     
     this.transactionService.getMyTransactions().subscribe({
       next: (res: any) => {
-        console.log('API Response:', res);
+        this.loggingService.debug('Transactions API Response:', res);
         let tx: Transaction[] = [];
 
         if (Array.isArray(res)) {
@@ -119,8 +125,8 @@ export class Dashboard implements OnInit {
         this.cdr.detectChanges();
       },
 
-      error: (error) => {
-        console.error('Error loading transactions:', error);
+      error: (error: Error) => {
+        this.loggingService.error('Error loading transactions', error);
         // Set default values on error
         this.financialSummary = {
           totalIncome: 0,

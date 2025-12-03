@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CategoryService } from '../core/services/category';
 import { AuthService } from '../core/services/auth';
+import { LoggingService } from '../core/services/logging.service';
 
 @Component({
   selector: 'app-categories-page',
@@ -30,6 +31,8 @@ export class CategoriesPage implements OnInit {
     this.categories().filter(cat => cat.type === 'expense').length
   );
 
+  private loggingService = inject(LoggingService);
+
   constructor(
     private categoryService: CategoryService,
     private router: Router,
@@ -48,8 +51,8 @@ export class CategoriesPage implements OnInit {
         this.categories.set(res.data || []);
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load categories:', err);
+      error: (err: Error) => {
+        this.loggingService.error('Failed to load categories', err);
         this.loading.set(false);
       }
     });
@@ -88,8 +91,8 @@ export class CategoriesPage implements OnInit {
         );
         this.deleteTarget.set(null);
       },
-      error: (err) => {
-        console.error('Delete failed:', err);
+      error: (err: Error) => {
+        this.loggingService.error('Delete category failed', err);
         this.deleteTarget.set(null);
       }
     });

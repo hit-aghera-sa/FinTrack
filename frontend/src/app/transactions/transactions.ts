@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TransactionService } from '../core/services/transaction';
 import { AuthService } from '../core/services/auth';
+import { LoggingService } from '../core/services/logging.service';
 
 const BACKEND_BASE = 'http://localhost:5001'; // change if needed
 
@@ -21,6 +22,8 @@ export class TransactionsPage implements OnInit {
   noteTarget = signal<any | null>(null);
   deleteTarget = signal<any | null>(null);
   attachmentsTarget = signal<any | null>(null); // { transactionId: string, attachments: string[] }
+
+  private loggingService = inject(LoggingService);
 
   constructor(
     private transactionService: TransactionService,
@@ -62,8 +65,8 @@ export class TransactionsPage implements OnInit {
         this.transactions.set(cleaned);
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load transactions', err);
+      error: (err: Error) => {
+        this.loggingService.error('Failed to load transactions', err);
         this.loading.set(false);
       }
     });
@@ -136,8 +139,8 @@ export class TransactionsPage implements OnInit {
         );
         this.closeDelete();
       },
-      error: (err) => {
-        console.error('delete transaction failed', err);
+      error: (err: Error) => {
+        this.loggingService.error('Delete transaction failed', err);
         this.closeDelete();
       }
     });
@@ -193,7 +196,7 @@ export class TransactionsPage implements OnInit {
 
           this.attachmentsTarget.set({ ...t, attachments: updated });
         },
-        error: (err) => console.error("replace failed", err)
+        error: (err: Error) => this.loggingService.error('Replace attachment failed', err)
       });
   }
 
@@ -211,7 +214,7 @@ export class TransactionsPage implements OnInit {
 
           this.attachmentsTarget.set({ ...t, attachments: mapped });
         },
-        error: (err) => console.error("delete failed", err)
+        error: (err: Error) => this.loggingService.error('Delete attachment failed', err)
       });
   }
 

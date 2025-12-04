@@ -8,11 +8,13 @@ import {
 } from '@angular/common/http';
 import { routes } from './app.routes';
 import { credentialsInterceptor } from './core/interceptors/credentials-interceptor';
+import { ErrorHandler } from '@angular/core';
+import { GlobalErrorHandler } from './core/error/global-error-handler';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
-
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideRouter(
       routes,
       withInMemoryScrolling({

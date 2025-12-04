@@ -8,15 +8,10 @@ import { finalize, take } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink
-  ],
-  templateUrl: './login.html'
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './login.html',
 })
 export class LoginComponent implements OnInit {
-
   loginForm: FormGroup;
   loading = false;
   errorMessage: string | null = null;
@@ -26,11 +21,11 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
   }
 
@@ -54,13 +49,14 @@ export class LoginComponent implements OnInit {
 
     const payload = this.loginForm.value;
 
-    this.auth.login(payload)
+    this.auth
+      .login(payload)
       .pipe(
         take(1),
         finalize(() => {
           this.loading = false;
           this.isSubmitting = false;
-        })
+        }),
       )
       .subscribe({
         next: (res: any) => {
@@ -70,12 +66,10 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           this.errorMessage =
-            err?.error?.message ||
-            err?.error?.error?.message ||
-            'Incorrect email or password';
+            err?.error?.message || err?.error?.error?.message || 'Incorrect email or password';
 
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 }

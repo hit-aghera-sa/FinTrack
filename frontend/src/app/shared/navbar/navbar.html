@@ -1,19 +1,21 @@
 <nav class="bg-gray-800 border-b border-gray-700">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-
       <div class="flex items-center space-x-3 cursor-pointer" (click)="navigate('/dashboard')">
-        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+        <div
+          class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center"
+        >
           <span class="text-white font-bold text-lg">₹</span>
         </div>
         <h1 class="text-2xl font-bold text-white">FinTrack</h1>
       </div>
 
-      <button (click)="logout()"
-        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-medium">
+      <button
+        (click)="logout()"
+        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-medium"
+      >
         Logout
       </button>
-
     </div>
   </div>
 </nav>

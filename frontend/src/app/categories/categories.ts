@@ -1,18 +1,18 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CategoryService } from '../core/services/category';
 import { AuthService } from '../core/services/auth';
+import { LoggingService } from '../core/services/logging.service';
 
 @Component({
   selector: 'app-categories-page',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './categories.html',
-  styleUrls: ['./categories.css']
+  styleUrls: ['./categories.css'],
 })
 export class CategoriesPage implements OnInit {
-
   categories = signal<any[]>([]);
   loading = signal(true);
 
@@ -22,18 +22,20 @@ export class CategoriesPage implements OnInit {
   currentPage = signal(1);
   pageSize = 9;
 
-  incomeCategoriesCount = computed(() =>
-    this.categories().filter(cat => cat.type === 'income').length
+  incomeCategoriesCount = computed(
+    () => this.categories().filter((cat) => cat.type === 'income').length,
   );
 
-  expenseCategoriesCount = computed(() =>
-    this.categories().filter(cat => cat.type === 'expense').length
+  expenseCategoriesCount = computed(
+    () => this.categories().filter((cat) => cat.type === 'expense').length,
   );
+
+  private loggingService = inject(LoggingService);
 
   constructor(
     private categoryService: CategoryService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -48,10 +50,10 @@ export class CategoriesPage implements OnInit {
         this.categories.set(res.data || []);
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load categories:', err);
+      error: (err: Error) => {
+        this.loggingService.error('Failed to load categories', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -83,15 +85,13 @@ export class CategoriesPage implements OnInit {
 
     this.categoryService.deleteCategory(cat._id).subscribe({
       next: () => {
-        this.categories.set(
-          this.categories().filter(c => c._id !== cat._id)
-        );
+        this.categories.set(this.categories().filter((c) => c._id !== cat._id));
         this.deleteTarget.set(null);
       },
-      error: (err) => {
-        console.error('Delete failed:', err);
+      error: (err: Error) => {
+        this.loggingService.error('Delete category failed', err);
         this.deleteTarget.set(null);
-      }
+      },
     });
   }
 
@@ -117,14 +117,14 @@ export class CategoriesPage implements OnInit {
   // For Next button
   nextPage() {
     if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(v => v + 1);
+      this.currentPage.update((v) => v + 1);
     }
   }
 
   // For Prev button
   prevPage() {
     if (this.currentPage() > 1) {
-      this.currentPage.update(v => v - 1);
+      this.currentPage.update((v) => v - 1);
     }
   }
 }

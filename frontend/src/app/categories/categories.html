@@ -1,20 +1,18 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-
   <!-- Navbar -->
   <nav class="bg-gray-800/80 backdrop-blur-xl border-b border-gray-700/50 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center"
+          >
             <span class="text-white font-bold text-lg">₹</span>
           </div>
           <h1 class="text-2xl font-bold text-white">FinTrack</h1>
         </div>
 
-        <button
-          (click)="logout()"
-          class="px-4 py-2 bg-red-600 text-white rounded-xl font-medium"
-        >
+        <button (click)="logout()" class="px-4 py-2 bg-red-600 text-white rounded-xl font-medium">
           Logout
         </button>
       </div>
@@ -23,7 +21,6 @@
 
   <!-- Main Content -->
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
     <!-- Header -->
     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
       <div class="space-y-2">
@@ -37,7 +34,12 @@
       >
         <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            ></path>
           </svg>
         </div>
         <span>Add Category</span>
@@ -47,37 +49,63 @@
     <!-- Stats Overview -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Total Categories -->
-      <div class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300">
+      <div
+        class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm font-medium">Total Categories</p>
             <p class="text-3xl font-bold text-white mt-2">{{ categories().length }}</p>
           </div>
           <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            <svg
+              class="w-6 h-6 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              ></path>
             </svg>
           </div>
         </div>
       </div>
 
       <!-- Income Categories -->
-      <div class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300 ">
+      <div
+        class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm font-medium">Income Categories</p>
             <p class="text-3xl font-bold text-white mt-2">{{ incomeCategoriesCount() }}</p>
           </div>
           <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <svg
+              class="w-6 h-6 text-green-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
             </svg>
           </div>
         </div>
       </div>
 
       <!-- Expense Categories -->
-      <div class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300">
+      <div
+        class="bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl transition-all duration-300"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm font-medium">Expense Categories</p>
@@ -85,7 +113,12 @@
           </div>
           <div class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
             <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              ></path>
             </svg>
           </div>
         </div>
@@ -94,139 +127,156 @@
     <!-- Loading -->
     <div *ngIf="loading()" class="text-center py-16">
       <div class="inline-flex items-center space-x-3 text-gray-400">
-        <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div
+          class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+        ></div>
         <span class="text-lg">Loading categories...</span>
       </div>
     </div>
 
     <!-- Empty -->
-    <div *ngIf="!loading() && categories().length === 0"
-      class="bg-gray-800 border border-gray-700 rounded-2xl p-12 text-center">
-    </div>
-
-  <!-- Categories Grid -->
-  <div *ngIf="!loading() && categories().length > 0"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
     <div
-      *ngFor="let cat of paginatedCategories()"
-      class="group bg-gradient-to-br from-gray-800/60 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl relative overflow-hidden"
+      *ngIf="!loading() && categories().length === 0"
+      class="bg-gray-800 border border-gray-700 rounded-2xl p-12 text-center"
+    ></div>
+
+    <!-- Categories Grid -->
+    <div
+      *ngIf="!loading() && categories().length > 0"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
     >
+      <div
+        *ngFor="let cat of paginatedCategories()"
+        class="group bg-gradient-to-br from-gray-800/60 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-xl relative overflow-hidden"
+      >
+        <!-- Background -->
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0"
+        ></div>
 
-      <!-- Background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0"></div>
-
-      <div class="relative z-10">
-
-        <!-- Header -->
-        <div class="flex items-start justify-between mb-4">
-
-          <!-- Icon + Name -->
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+        <div class="relative z-10">
+          <!-- Header -->
+          <div class="flex items-start justify-between mb-4">
+            <!-- Icon + Name -->
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 rounded-xl flex items-center justify-center"
                 [class.bg-green-500/20]="cat.type === 'income'"
-                [class.bg-red-500/20]="cat.type === 'expense'">
-
-              <svg class="w-5 h-5"
+                [class.bg-red-500/20]="cat.type === 'expense'"
+              >
+                <svg
+                  class="w-5 h-5"
                   [class.text-green-400]="cat.type === 'income'"
                   [class.text-red-400]="cat.type === 'expense'"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <!-- Income Icon -->
+                  <path
+                    *ngIf="cat.type === 'income'"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
 
-                <!-- Income Icon -->
-                <path *ngIf="cat.type === 'income'"
-                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <!-- Expense Icon -->
+                  <path
+                    *ngIf="cat.type === 'expense'"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  ></path>
+                </svg>
+              </div>
 
-                <!-- Expense Icon -->
-                <path *ngIf="cat.type === 'expense'"
-                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-              </svg>
-
+              <div>
+                <h3 class="text-lg font-semibold text-white">
+                  {{ cat.name }}
+                </h3>
+                <span class="text-sm text-gray-400">Category</span>
+              </div>
             </div>
 
-            <div>
-              <h3 class="text-lg font-semibold text-white">
-                {{ cat.name }}
-              </h3>
-              <span class="text-sm text-gray-400">Category</span>
-            </div>
+            <!-- Type Badge -->
+            <span
+              class="px-3 py-1.5 rounded-full text-xs font-semibold border shadow-sm"
+              [class.bg-red-500/10]="cat.type === 'expense'"
+              [class.text-red-400]="cat.type === 'expense'"
+              [class.border-red-500/30]="cat.type === 'expense'"
+              [class.bg-green-500/10]="cat.type === 'income'"
+              [class.text-green-400]="cat.type === 'income'"
+              [class.border-green-500/30]="cat.type === 'income'"
+            >
+              {{ cat.type === 'income' ? 'Income' : 'Expense' }}
+            </span>
           </div>
 
-          <!-- Type Badge -->
-          <span class="px-3 py-1.5 rounded-full text-xs font-semibold border shadow-sm"
-            [class.bg-red-500/10]="cat.type === 'expense'"
-            [class.text-red-400]="cat.type === 'expense'"
-            [class.border-red-500/30]="cat.type === 'expense'"
-            [class.bg-green-500/10]="cat.type === 'income'"
-            [class.text-green-400]="cat.type === 'income'"
-            [class.border-green-500/30]="cat.type === 'income'">
-            {{ cat.type === 'income' ? 'Income' : 'Expense' }}
-          </span>
+          <!-- Created Date -->
+          <div
+            class="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-gray-700/50"
+          >
+            <span>Created</span>
+            <span>{{ cat.createdAt ? (cat.createdAt | date: 'mediumDate') : 'Recently' }}</span>
+          </div>
 
+          <!-- ACTION BUTTONS (Final placement) -->
+          <div class="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-gray-700/50">
+            <!-- Edit -->
+            <button
+              (click)="editCategory(cat)"
+              class="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-xs font-medium border border-blue-500/30"
+            >
+              Edit
+            </button>
+
+            <!-- Delete -->
+            <button
+              (click)="openDelete(cat)"
+              class="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-medium border border-red-500/30"
+            >
+              Delete
+            </button>
+          </div>
         </div>
-
-        <!-- Created Date -->
-        <div class="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-gray-700/50">
-          <span>Created</span>
-          <span>{{ cat.createdAt ? (cat.createdAt | date:'mediumDate') : 'Recently' }}</span>
-        </div>
-
-        <!-- ACTION BUTTONS (Final placement) -->
-        <div class="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-gray-700/50">
-
-          <!-- Edit -->
-          <button
-            (click)="editCategory(cat)"
-            class="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-xs font-medium border border-blue-500/30">
-            Edit
-          </button>
-
-          <!-- Delete -->
-          <button
-            (click)="openDelete(cat)"
-            class="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-medium border border-red-500/30">
-            Delete
-          </button>
-
-        </div>
-
       </div>
     </div>
-  </div>
-
   </div>
 
   <!-- Delete Confirmation Modal -->
-  <div *ngIf="deleteTarget()"
-      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-
+  <div
+    *ngIf="deleteTarget()"
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+  >
     <div class="bg-gray-800 w-full max-w-md rounded-2xl p-6 border border-gray-700 shadow-xl">
-
       <h2 class="text-xl font-bold text-white mb-3">Delete Category?</h2>
       <p class="text-gray-300 mb-6">
-        Are you sure you want to delete 
-        <span class="text-red-400 font-semibold">{{ deleteTarget()?.name }}</span>?
-        This action cannot be undone.
+        Are you sure you want to delete
+        <span class="text-red-400 font-semibold">{{ deleteTarget()?.name }}</span
+        >? This action cannot be undone.
       </p>
 
       <div class="flex justify-end gap-3">
-        <button (click)="closeDelete()" class="px-4 py-2 bg-gray-700 text-white rounded-xl">Cancel</button>
-        <button (click)="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-xl">Delete</button>
+        <button (click)="closeDelete()" class="px-4 py-2 bg-gray-700 text-white rounded-xl">
+          Cancel
+        </button>
+        <button (click)="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-xl">
+          Delete
+        </button>
       </div>
-
     </div>
   </div>
 
   <!-- Pagination -->
-  <div class="flex justify-center items-center gap-3 mt-10"
-      *ngIf="totalPages() > 1">
-
+  <div class="flex justify-center items-center gap-3 mt-10" *ngIf="totalPages() > 1">
     <!-- Prev -->
     <button
       (click)="prevPage()"
       class="px-4 py-2 bg-gray-700 text-white rounded-lg"
-      [disabled]="currentPage() === 1">
+      [disabled]="currentPage() === 1"
+    >
       Prev
     </button>
 
@@ -234,12 +284,13 @@
     <div class="flex items-center gap-2">
       <button
         *ngFor="let page of [].constructor(totalPages()); let i = index"
-        (click)="goToPage(i+1)"
+        (click)="goToPage(i + 1)"
         class="px-3 py-2 rounded-lg"
-        [class.bg-blue-600]="currentPage() === (i+1)"
-        [class.text-white]="currentPage() === (i+1)"
-        [class.bg-gray-700]="currentPage() !== (i+1)"
-        [class.text-gray-300]="currentPage() !== (i+1)">
+        [class.bg-blue-600]="currentPage() === i + 1"
+        [class.text-white]="currentPage() === i + 1"
+        [class.bg-gray-700]="currentPage() !== i + 1"
+        [class.text-gray-300]="currentPage() !== i + 1"
+      >
         {{ i + 1 }}
       </button>
     </div>
@@ -248,10 +299,9 @@
     <button
       (click)="nextPage()"
       class="px-4 py-2 bg-gray-700 text-white rounded-lg"
-      [disabled]="currentPage() === totalPages()">
+      [disabled]="currentPage() === totalPages()"
+    >
       Next
     </button>
-
   </div>
-
 </div>

@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionService {
-
   private api = 'http://localhost:5001/api/transaction';
 
   constructor(private http: HttpClient) {}
@@ -21,7 +20,7 @@ export class TransactionService {
 
   updateTransaction(id: string, data: any): Observable<any> {
     return this.http.patch(`${this.api}/${id}`, data, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
@@ -33,14 +32,14 @@ export class TransactionService {
     return this.http.post<{ status: string; attachments: string[] }>(
       `http://localhost:5001/api/attachment/transaction/${transactionId}`,
       formData,
-      { withCredentials: true }
+      { withCredentials: true },
     );
   }
 
   deleteAttachment(transactionId: string, index: number) {
     return this.http.delete<{ status: string; attachments: string[] }>(
       `http://localhost:5001/api/attachment/transaction/${transactionId}/${index}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
   }
 
@@ -48,8 +47,7 @@ export class TransactionService {
     return this.http.patch<{ status: string; attachments: string[] }>(
       `http://localhost:5001/api/attachment/transaction/${transactionId}/${index}`,
       formData,
-      { withCredentials: true }
+      { withCredentials: true },
     );
   }
-
 }

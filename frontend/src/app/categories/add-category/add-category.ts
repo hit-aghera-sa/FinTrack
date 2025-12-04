@@ -13,24 +13,35 @@ import { LoggingService } from '../../core/services/logging.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-category.html',
-  styleUrls: ['./add-category.css']
+  styleUrls: ['./add-category.css'],
 })
 export class AddCategory implements OnInit, OnDestroy {
-
   // signals
   private _name = signal('');
   private _type = signal<'income' | 'expense'>('expense');
   private _errorMessage = signal<string | null>(null);
 
   // getters / setters
-  get name() { return this._name(); }
-  set name(val: string) { this._name.set(val); }
+  get name() {
+    return this._name();
+  }
+  set name(val: string) {
+    this._name.set(val);
+  }
 
-  get type() { return this._type(); }
-  set type(val: 'income' | 'expense') { this._type.set(val); }
+  get type() {
+    return this._type();
+  }
+  set type(val: 'income' | 'expense') {
+    this._type.set(val);
+  }
 
-  get errorMessage() { return this._errorMessage(); }
-  set errorMessage(val: string | null) { this._errorMessage.set(val); }
+  get errorMessage() {
+    return this._errorMessage();
+  }
+  set errorMessage(val: string | null) {
+    this._errorMessage.set(val);
+  }
 
   private destroy$ = new Subject<void>();
   private readonly maxAuthCheckAttempts = 10;
@@ -40,7 +51,7 @@ export class AddCategory implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private router: Router,
     private authService: AuthService,
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +60,7 @@ export class AddCategory implements OnInit, OnDestroy {
 
   waitForAuth(): void {
     let attempts = 0;
-    
+
     timer(0, this.checkIntervalMs)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -57,7 +68,7 @@ export class AddCategory implements OnInit, OnDestroy {
           if (this.authService.isAuthenticated()) {
             return;
           }
-          
+
           attempts++;
           if (attempts >= this.maxAuthCheckAttempts) {
             this.router.navigate(['/login']);
@@ -66,15 +77,14 @@ export class AddCategory implements OnInit, OnDestroy {
         error: (err) => {
           this.loggingService.error('Error in auth check', err);
           this.router.navigate(['/login']);
-        }
+        },
       });
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
 
   submit(): void {
     this.errorMessage = null;
@@ -85,14 +95,14 @@ export class AddCategory implements OnInit, OnDestroy {
 
     const payload = {
       name: this.name.trim(),
-      type: this.type
+      type: this.type,
     };
 
     this.categoryService.createCategory(payload).subscribe({
       next: () => this.router.navigate(['/categories']),
-      error: err => {
+      error: (err) => {
         this.errorMessage = err?.error?.message || 'Something went wrong.';
-      }
+      },
     });
   }
 

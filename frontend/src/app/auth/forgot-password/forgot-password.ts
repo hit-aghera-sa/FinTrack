@@ -14,11 +14,10 @@ import { LoggingService } from '../../core/services/logging.service';
   templateUrl: './forgot-password.html',
 })
 export class ForgotPassword implements OnDestroy {
-
   forgotPasswordForm: FormGroup;
   loading = false;
-  errorMessage = "";
-  successMessage = "";
+  errorMessage = '';
+  successMessage = '';
 
   private destroy$ = new Subject<void>();
   private readonly redirectDelay = 3000; // 3 seconds
@@ -28,44 +27,41 @@ export class ForgotPassword implements OnDestroy {
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
   ) {
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
   submit() {
     if (this.forgotPasswordForm.invalid) {
-      this.errorMessage = "Please enter a valid email address";
+      this.errorMessage = 'Please enter a valid email address';
       return;
     }
 
     this.loading = true;
-    this.errorMessage = "";
-    this.successMessage = "";
+    this.errorMessage = '';
+    this.successMessage = '';
 
     const email = this.forgotPasswordForm.get('email')?.value;
 
     this.authService.forgotPassword(email).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.successMessage = res.message || "Reset link sent to your email";
+        this.successMessage = res.message || 'Reset link sent to your email';
 
         this.forgotPasswordForm.reset();
 
         // Use RxJS timer for the redirect
         timer(this.redirectDelay)
-          .pipe(
-            take(1),
-            takeUntil(this.destroy$)
-          )
+          .pipe(take(1), takeUntil(this.destroy$))
           .subscribe({
             next: () => this.router.navigate(['/login']),
             error: (err) => {
               this.loggingService.error('Error during navigation after forgot password', err);
               this.router.navigate(['/login']);
-            }
+            },
           });
       },
       error: (err) => {
@@ -73,10 +69,10 @@ export class ForgotPassword implements OnDestroy {
 
         if (err.error?.message) this.errorMessage = err.error.message;
         else if (typeof err.error === 'string') this.errorMessage = err.error;
-        else this.errorMessage = "Failed to send reset link";
+        else this.errorMessage = 'Failed to send reset link';
 
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 

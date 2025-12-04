@@ -5,5 +5,4 @@ import { LoggingService } from './app/core/services/logging.service';
 
 const loggingService = new LoggingService();
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => loggingService.error('Bootstrap error', err));
+bootstrapApplication(App, appConfig).catch((err) => loggingService.error('Bootstrap error', err));

@@ -20,17 +20,16 @@ interface Transaction {
   standalone: true,
   imports: [CommonModule, RouterLink, NavbarComponent],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.css']
+  styleUrls: ['./dashboard.css'],
 })
 export class Dashboard implements OnInit {
-
   financialSummary = {
     totalIncome: 0,
     totalExpense: 0,
     balance: 0,
-    savingsRate: 0
+    savingsRate: 0,
   };
-   // Flag to prevent multiple loads
+  // Flag to prevent multiple loads
   dataLoaded = false;
   categories: any[] = [];
   recentTransactions: Transaction[] = [];
@@ -43,11 +42,11 @@ export class Dashboard implements OnInit {
     private authService: AuthService,
     private categoryService: CategoryService,
     private transactionService: TransactionService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.loggingService.info("Dashboard init → waiting for session...");
+    this.loggingService.info('Dashboard init → waiting for session...');
     this.waitForAuthAndLoad();
   }
 
@@ -55,15 +54,15 @@ export class Dashboard implements OnInit {
   waitForAuthAndLoad() {
     this.authService.checkSession().subscribe({
       next: () => {
-        this.loggingService.info("Session OK → loading dashboard...");
+        this.loggingService.info('Session OK → loading dashboard...');
         localStorage.setItem('isAuthenticated', 'true');
         this.loadDashboardData();
       },
       error: (err: Error) => {
-        this.loggingService.warn("Session check failed, redirecting to login");
+        this.loggingService.warn('Session check failed, redirecting to login', err);
         localStorage.removeItem('isAuthenticated');
         this.router.navigate(['/login']);
-      }
+      },
     });
   }
 
@@ -79,14 +78,14 @@ export class Dashboard implements OnInit {
       },
       error: (err: Error) => {
         this.loggingService.error('Failed to load categories', err);
-      }
+      },
     });
   }
 
   loadTransactions(): void {
     // Prevent multiple loads
-    if (this.dataLoaded) return; 
-    
+    if (this.dataLoaded) return;
+
     this.transactionService.getMyTransactions().subscribe({
       next: (res: any) => {
         this.loggingService.debug('Transactions API Response:', res);
@@ -115,12 +114,12 @@ export class Dashboard implements OnInit {
           totalIncome: income,
           totalExpense: expense,
           balance: balance,
-          savingsRate: income > 0 ? Number(((balance / income) * 100).toFixed(1)) : 0
+          savingsRate: income > 0 ? Number(((balance / income) * 100).toFixed(1)) : 0,
         };
 
         this.expenseCategories = this.buildExpenseBreakdown(tx);
         this.dataLoaded = true; // Mark as loaded
-        
+
         // Manually trigger change detection
         this.cdr.detectChanges();
       },
@@ -132,16 +131,16 @@ export class Dashboard implements OnInit {
           totalIncome: 0,
           totalExpense: 0,
           balance: 0,
-          savingsRate: 0
+          savingsRate: 0,
         };
         this.dataLoaded = true;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   buildExpenseBreakdown(tx: Transaction[]) {
-    const expenses = tx.filter(t => t.type === 'expense');
+    const expenses = tx.filter((t) => t.type === 'expense');
     const totals: Record<string, number> = {};
 
     for (const t of expenses) {
@@ -151,12 +150,10 @@ export class Dashboard implements OnInit {
 
     const totalExpense = Object.values(totals).reduce((a, b) => a + b, 0);
 
-    return Object.keys(totals).map(c => ({
+    return Object.keys(totals).map((c) => ({
       name: c,
       amount: totals[c],
-      percentage: totalExpense > 0
-        ? Math.round((totals[c] / totalExpense) * 100)
-        : 0
+      percentage: totalExpense > 0 ? Math.round((totals[c] / totalExpense) * 100) : 0,
     }));
   }
 

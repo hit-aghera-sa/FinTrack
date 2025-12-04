@@ -9,10 +9,9 @@ import { LoggingService } from '../../core/services/logging.service';
   selector: 'app-edit-category',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './edit-category.html'
+  templateUrl: './edit-category.html',
 })
 export class EditCategory implements OnInit {
-
   id = '';
   name = '';
 
@@ -37,11 +36,10 @@ export class EditCategory implements OnInit {
   }
 
   save(): void {
-    this.categoryService.updateCategory(this.id, { name: this.name.trim() })
-      .subscribe({
-        next: () => this.router.navigate(['/categories']),
-        error: (err: Error) => this.loggingService.error('Failed to update category', err)
-      });
+    this.categoryService.updateCategory(this.id, { name: this.name.trim() }).subscribe({
+      next: () => this.router.navigate(['/categories']),
+      error: (err: Error) => this.loggingService.error('Failed to update category', err),
+    });
   }
 
   goBack(): void {

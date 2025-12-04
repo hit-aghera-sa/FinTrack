@@ -5,14 +5,13 @@ import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
-  private api = 'http://localhost:5001/api/user';   // BASE ROUTE
+  private api = 'http://localhost:5001/api/user'; // BASE ROUTE
   private isBrowser: boolean;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    @Inject(PLATFORM_ID) platformId: Object
+    @Inject(PLATFORM_ID) platformId: Object,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
@@ -28,12 +27,11 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${this.api}/logout`, {}, { withCredentials: true })
-      .subscribe(() => {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('user');
-        this.router.navigate(['/login']);
-      });
+    this.http.post(`${this.api}/logout`, {}, { withCredentials: true }).subscribe(() => {
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
+      this.router.navigate(['/login']);
+    });
   }
 
   signup(data: any) {

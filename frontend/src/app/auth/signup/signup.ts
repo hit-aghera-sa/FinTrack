@@ -11,39 +11,41 @@ import { AuthService } from '../../core/services/auth';
   templateUrl: './signup.html',
 })
 export class Signup {
-
   signupForm: FormGroup;
   loading = false;
-  errorMessage = "";
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) 
-  {
-    this.signupForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordConfirm: ['', [Validators.required]]
-    }, { validators: this.passwordMatch });
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.signupForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        passwordConfirm: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatch },
+    );
   }
 
   passwordMatch(form: FormGroup) {
     return form.get('password')?.value === form.get('passwordConfirm')?.value
-      ? null : { mismatch: true };
+      ? null
+      : { mismatch: true };
   }
 
   submit() {
     if (this.signupForm.invalid || this.signupForm.errors?.['mismatch']) {
-      this.errorMessage = "Passwords do not match";
+      this.errorMessage = 'Passwords do not match';
       return;
     }
 
     this.loading = true;
-    this.errorMessage = "";
+    this.errorMessage = '';
 
     this.authService.signup(this.signupForm.value).subscribe({
       next: () => {
@@ -55,10 +57,10 @@ export class Signup {
 
         if (err.error?.message) this.errorMessage = err.error.message;
         else if (typeof err.error === 'string') this.errorMessage = err.error;
-        else this.errorMessage = "Signup failed";
+        else this.errorMessage = 'Signup failed';
 
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 }

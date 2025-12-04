@@ -10,3 +10,8 @@
 {"level":"info","message":"MongoDB connected","service":"backend","timestamp":"2025-12-03 19:08:10"}
 {"level":"info","message":"MongoDB Connected: localhost","service":"backend","timestamp":"2025-12-03 19:08:10"}
 {"level":"info","message":"Update transaction called","service":"backend","timestamp":"2025-12-03 19:20:25","transactionId":"69304015c98aa1007e217eea","userId":"6927efd47d4d92b1169e2a0c"}
+{"level":"warn","message":"MongoDB disconnected","service":"backend","timestamp":"2025-12-03 19:27:18"}
+{"level":"info","message":"Server running on port 5001","service":"backend","timestamp":"2025-12-03 19:27:33"}
+{"level":"info","message":"MongoDB connected","service":"backend","timestamp":"2025-12-03 19:27:33"}
+{"level":"info","message":"MongoDB Connected: localhost","service":"backend","timestamp":"2025-12-03 19:27:33"}
+{"level":"warn","message":"MongoDB disconnected","service":"backend","timestamp":"2025-12-03 19:27:35"}

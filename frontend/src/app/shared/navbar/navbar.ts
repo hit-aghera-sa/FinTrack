@@ -7,12 +7,12 @@ import { AuthService } from '../../core/services/auth';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './navbar.html'
+  templateUrl: './navbar.html',
 })
 export class NavbarComponent {
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   navigate(path: string) {

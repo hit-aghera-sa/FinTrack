@@ -12,10 +12,9 @@ const BACKEND_BASE = 'http://localhost:5001'; // change if needed
   standalone: true,
   imports: [CommonModule],
   templateUrl: './transactions.html',
-  styleUrls: ['./transactions.css']
+  styleUrls: ['./transactions.css'],
 })
 export class TransactionsPage implements OnInit {
-
   transactions = signal<any[]>([]);
   loading = signal(true);
 
@@ -28,7 +27,7 @@ export class TransactionsPage implements OnInit {
   constructor(
     private transactionService: TransactionService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -58,7 +57,7 @@ export class TransactionsPage implements OnInit {
             type,
             attachments,
             categoryId,
-            description: t.description || ''
+            description: t.description || '',
           };
         });
 
@@ -68,19 +67,21 @@ export class TransactionsPage implements OnInit {
       error: (err: Error) => {
         this.loggingService.error('Failed to load transactions', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
   // Stats
   totalIncome = computed(() =>
-    this.transactions().filter(t => t.type === 'income')
-      .reduce((s, t) => s + (Number(t.amount) || 0), 0)
+    this.transactions()
+      .filter((t) => t.type === 'income')
+      .reduce((s, t) => s + (Number(t.amount) || 0), 0),
   );
 
   totalExpense = computed(() =>
-    this.transactions().filter(t => t.type === 'expense')
-      .reduce((s, t) => s + (Number(t.amount) || 0), 0)
+    this.transactions()
+      .filter((t) => t.type === 'expense')
+      .reduce((s, t) => s + (Number(t.amount) || 0), 0),
   );
 
   balance = computed(() => this.totalIncome() - this.totalExpense());
@@ -89,9 +90,7 @@ export class TransactionsPage implements OnInit {
   currentPage = signal(1);
   pageSize = 9;
 
-  totalPages = computed(() =>
-    Math.ceil(this.transactions().length / this.pageSize)
-  );
+  totalPages = computed(() => Math.ceil(this.transactions().length / this.pageSize));
 
   paginatedTransactions = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize;
@@ -100,13 +99,13 @@ export class TransactionsPage implements OnInit {
 
   nextPage() {
     if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(v => v + 1);
+      this.currentPage.update((v) => v + 1);
     }
   }
 
   prevPage() {
     if (this.currentPage() > 1) {
-      this.currentPage.update(v => v - 1);
+      this.currentPage.update((v) => v - 1);
     }
   }
 
@@ -134,15 +133,13 @@ export class TransactionsPage implements OnInit {
 
     this.transactionService.deleteTransaction(t._id).subscribe({
       next: () => {
-        this.transactions.set(
-          this.transactions().filter(x => x._id !== t._id)
-        );
+        this.transactions.set(this.transactions().filter((x) => x._id !== t._id));
         this.closeDelete();
       },
       error: (err: Error) => {
         this.loggingService.error('Delete transaction failed', err);
         this.closeDelete();
-      }
+      },
     });
   }
 
@@ -160,11 +157,9 @@ export class TransactionsPage implements OnInit {
     this.attachmentsTarget.set({
       transactionId: t._id,
       attachments: (t.attachments || []).map((p: string) =>
-        p.startsWith("http")
-          ? `${p}?t=${Date.now()}`
-          : `${BACKEND_BASE}${p}?t=${Date.now()}`
+        p.startsWith('http') ? `${p}?t=${Date.now()}` : `${BACKEND_BASE}${p}?t=${Date.now()}`,
       ),
-      title: t.categoryId?.name || 'Attachments'
+      title: t.categoryId?.name || 'Attachments',
     });
   }
 
@@ -187,17 +182,16 @@ export class TransactionsPage implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.transactionService.updateAttachment(transactionId, index, formData)
-      .subscribe({
-        next: (res) => {
-          const updated = [...t.attachments];
+    this.transactionService.updateAttachment(transactionId, index, formData).subscribe({
+      next: (res) => {
+        const updated = [...t.attachments];
 
-          updated[index] = `${BACKEND_BASE}${res.attachments[index]}?t=${Date.now()}`;
+        updated[index] = `${BACKEND_BASE}${res.attachments[index]}?t=${Date.now()}`;
 
-          this.attachmentsTarget.set({ ...t, attachments: updated });
-        },
-        error: (err: Error) => this.loggingService.error('Replace attachment failed', err)
-      });
+        this.attachmentsTarget.set({ ...t, attachments: updated });
+      },
+      error: (err: Error) => this.loggingService.error('Replace attachment failed', err),
+    });
   }
 
   // Delete file
@@ -205,17 +199,13 @@ export class TransactionsPage implements OnInit {
     const t = this.attachmentsTarget();
     const transactionId = t.transactionId;
 
-    this.transactionService.deleteAttachment(transactionId, index)
-      .subscribe({
-        next: (res) => {
-          const mapped = res.attachments.map(p =>
-            `${BACKEND_BASE}${p}?t=${Date.now()}`
-          );
+    this.transactionService.deleteAttachment(transactionId, index).subscribe({
+      next: (res) => {
+        const mapped = res.attachments.map((p) => `${BACKEND_BASE}${p}?t=${Date.now()}`);
 
-          this.attachmentsTarget.set({ ...t, attachments: mapped });
-        },
-        error: (err: Error) => this.loggingService.error('Delete attachment failed', err)
-      });
+        this.attachmentsTarget.set({ ...t, attachments: mapped });
+      },
+      error: (err: Error) => this.loggingService.error('Delete attachment failed', err),
+    });
   }
-
 }

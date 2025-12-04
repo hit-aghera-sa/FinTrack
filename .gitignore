@@ -6,13 +6,17 @@
 # Backend specific
 /backend/node_modules/
 /backend/uploads/
+/backend/log/    
+/backend/npm-debug.log
+/backend/yarn-error.log
 
-# Frontend specific
+# Frontend specific (Angular 20)
 /frontend/node_modules/
 /frontend/dist/
 /frontend/tmp/
 /frontend/out-tsc/
 /frontend/bazel-out/
+/frontend/.angular/ 
 /frontend/npm-debug.log
 /frontend/yarn-error.log
 
@@ -31,10 +35,9 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
+.history/
 
 # Miscellaneous
-/frontend/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage

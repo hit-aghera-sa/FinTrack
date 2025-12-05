@@ -37,7 +37,7 @@ const updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(
-        'password can change only throgh /api/user/updatePassword',
+        'password can change only throgh /api/user/update-password',
         401
       )
     );

@@ -1,4 +1,6 @@
 const express = require('express');
+const validate = require('../middlewares/validate.middleware');
+
 const {
   signUp,
   login,
@@ -7,7 +9,20 @@ const {
   updatePassword,
   logout
 } = require('../controllers/auth.controller');
+
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
+
+const {
+  signupSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  updatePasswordSchema
+} = require('../validations/auth.validation');
+
+const { updateMeSchema } = require('../validations/user.validation');
+
+
 const {
   getAllUsers,
   getUser,
@@ -15,6 +30,7 @@ const {
   deactiveMe,
   deactiveUser
 } = require('../controllers/user.controller');
+
 const {
   signupLimiter,
   loginLimiter,
@@ -25,10 +41,10 @@ const router = express.Router();
 
 router
 
-  .post('/signup', signupLimiter, signUp)
-  .post('/login', loginLimiter, login)
-  .post('/forgot-password', forgotLimiter, forgotPassword)
-  .patch('/reset-password/:token', resetPassword);
+  .post('/signup', signupLimiter, validate(signupSchema), signUp)
+  .post('/login', loginLimiter, validate(loginSchema), login)
+  .post('/forgot-password', forgotLimiter, validate(forgotPasswordSchema), forgotPassword)
+  .patch('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
 router.use(protect);
 
@@ -39,13 +55,15 @@ router
       user: req.user
     });
   })
-  .patch('/update-password', updatePassword)
-  .patch('/update-me', updateMe)
+  .patch('/update-password', validate(updatePasswordSchema), updatePassword)
+  .patch('/update-me', validate(updateMeSchema), updateMe)
   .delete('/delete-me', deactiveMe)
   .post('/logout', logout);
 
 router.use(restrictTo('admin'));
 
-router.get('/', getAllUsers).get('/:id', getUser).delete('/:id', deactiveUser);
+router.get('/', getAllUsers)
+  .get('/:id', getUser)
+  .delete('/:id', deactiveUser);
 
 module.exports = router;

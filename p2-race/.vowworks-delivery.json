@@ -1,0 +1,11 @@
+{
+  "managed_by": "VowWorks App Builder",
+  "folder": "p2-race",
+  "branch": "main",
+  "note": "This folder is generated. The files listed below are replaced on each delivery and a delivery will never remove anything that is not listed here. Nothing outside this folder is ever modified. Removing this file makes the next delivery refuse rather than write into a folder it cannot prove is its own.",
+  "files": [
+    ".vowworks-delivery.json",
+    "a.js",
+    "package.json"
+  ]
+}

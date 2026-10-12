@@ -1,0 +1,43 @@
+.ui-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-xs);
+  padding: 2px var(--ui-space-sm);
+  border: var(--ui-border-width) solid transparent;
+  border-radius: var(--ui-radius-pill);
+  font-family: var(--ui-font-family);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-tight);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.ui-status-chip__symbol {
+  font-size: var(--ui-font-size-sm);
+  line-height: 1;
+}
+
+.ui-status--todo {
+  background: var(--ui-status-todo-surface);
+  color: var(--ui-status-todo-ink);
+  border-color: var(--ui-status-todo-accent);
+}
+
+.ui-status--doing {
+  background: var(--ui-status-doing-surface);
+  color: var(--ui-status-doing-ink);
+  border-color: var(--ui-status-doing-accent);
+}
+
+.ui-status--done {
+  background: var(--ui-status-done-surface);
+  color: var(--ui-status-done-ink);
+  border-color: var(--ui-status-done-accent);
+}
+
+.ui-status--neutral {
+  background: var(--ui-status-neutral-surface);
+  color: var(--ui-status-neutral-ink);
+  border-color: var(--ui-status-neutral-accent);
+}

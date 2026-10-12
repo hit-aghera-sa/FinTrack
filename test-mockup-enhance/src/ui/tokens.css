@@ -1,0 +1,117 @@
+/*
+ * Design tokens for "Test mockup enhance".
+ *
+ * COLOUR IS NOT DECLARED HERE. Every colour of this app lives in the frozen
+ * src/styles/theme.css as a --color-* custom property (light and dark) and is
+ * referenced below as var(--color-*). The tokens in this file add the parts the
+ * theme does not name: typography, spacing, radius, border weights and the
+ * status accents for To do / Doing / Done, each of which is an ALIAS over an
+ * existing colour token so the dark theme keeps working.
+ */
+
+:root {
+  /* Typography */
+  --ui-font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ui-font-size-base: 16px;
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-sm: 0.875rem;
+  --ui-font-size-md: 1rem;
+  --ui-font-size-lg: 1.125rem;
+  --ui-font-size-xl: 1.375rem;
+  --ui-font-weight-regular: 400;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-bold: 700;
+  --ui-line-height-tight: 1.25;
+  --ui-line-height-body: 1.55;
+
+  /* Spacing scale */
+  --ui-space-xs: 4px;
+  --ui-space-sm: 8px;
+  --ui-space-md: 16px;
+  --ui-space-lg: 24px;
+  --ui-space-xl: 40px;
+
+  /* Radius */
+  --ui-radius-sm: 6px;
+  --ui-radius-md: 10px;
+  --ui-radius-pill: 999px;
+
+  /* Lines */
+  --ui-border-width: 1px;
+  --ui-accent-width: 4px;
+
+  /* Status accents — To do */
+  --ui-status-todo-surface: var(--color-muted);
+  --ui-status-todo-ink: var(--color-foreground);
+  --ui-status-todo-accent: var(--color-muted-foreground);
+
+  /* Status accents — Doing */
+  --ui-status-doing-surface: var(--color-accent);
+  --ui-status-doing-ink: var(--color-accent-foreground);
+  --ui-status-doing-accent: var(--color-accent);
+
+  /* Status accents — Done */
+  --ui-status-done-surface: var(--color-success);
+  --ui-status-done-ink: var(--color-success-foreground);
+  --ui-status-done-accent: var(--color-success);
+
+  /* Status accents — anything unrecognised */
+  --ui-status-neutral-surface: var(--color-muted);
+  --ui-status-neutral-ink: var(--color-foreground);
+  --ui-status-neutral-accent: var(--color-border);
+}
+
+/* Desktop-first layout helpers shared by the feature screens. */
+.ui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-md);
+}
+
+.ui-stack-lg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-lg);
+}
+
+.ui-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-sm);
+  flex-wrap: wrap;
+}
+
+.ui-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-md);
+  flex-wrap: wrap;
+}
+
+.ui-columns-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-lg);
+  align-items: start;
+}
+
+.ui-columns-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-lg);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ui-columns-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .ui-columns-3,
+  .ui-columns-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

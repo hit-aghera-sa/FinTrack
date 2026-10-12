@@ -1,0 +1,117 @@
+{
+  "title": "Task comments HTTP API",
+  "aaPass": true,
+  "screenKey": "screen-task-comments-http-api",
+  "components": [
+    "Card",
+    "Input",
+    "Button"
+  ],
+  "gridTemplate": "\"content\" / 1fr",
+  "templateName": "auth-page",
+  "layoutTemplate": {
+    "name": "auth-page",
+    "regions": [
+      {
+        "name": "content",
+        "gridArea": "content",
+        "elevation": 3,
+        "components": [
+          "Card",
+          "Input",
+          "Button"
+        ]
+      }
+    ],
+    "description": "Centred authentication form with brand identity",
+    "suitableFor": [
+      "login",
+      "auth",
+      "register",
+      "signup"
+    ],
+    "gridTemplate": "\"content\" / 1fr"
+  },
+  "componentFinishes": [
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        },
+        {
+          "token": "secondary",
+          "weight": "medium",
+          "context": "secondary-action",
+          "application": "Outline/border on secondary buttons, selected tabs"
+        },
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Button",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Input",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "raised",
+        "level": 1,
+        "usage": "Cards, panels, popovers at rest",
+        "shadow": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)"
+      },
+      "accentRules": [],
+      "componentName": "Card",
+      "hierarchyPattern": {
+        "name": "card-title",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 4
+      }
+    }
+  ]
+}

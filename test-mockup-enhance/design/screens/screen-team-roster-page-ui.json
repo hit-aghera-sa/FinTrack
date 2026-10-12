@@ -1,0 +1,199 @@
+{
+  "title": "Team roster page UI",
+  "aaPass": true,
+  "screenKey": "screen-team-roster-page-ui",
+  "components": [
+    "Navigation",
+    "Button",
+    "Input",
+    "Badge",
+    "Table"
+  ],
+  "gridTemplate": "\"nav nav\" \"toolbar toolbar\" \"content content\" / 1fr",
+  "templateName": "data-table",
+  "layoutTemplate": {
+    "name": "data-table",
+    "regions": [
+      {
+        "name": "navigation",
+        "gridArea": "nav",
+        "elevation": 4,
+        "components": [
+          "Navigation"
+        ]
+      },
+      {
+        "name": "toolbar",
+        "gridArea": "toolbar",
+        "elevation": 1,
+        "components": [
+          "Button",
+          "Input",
+          "Badge"
+        ]
+      },
+      {
+        "name": "content",
+        "gridArea": "content",
+        "elevation": 0,
+        "components": [
+          "Table"
+        ]
+      }
+    ],
+    "description": "Paginated data table with toolbar and filter controls",
+    "suitableFor": [
+      "list",
+      "table",
+      "data",
+      "report",
+      "users",
+      "projects"
+    ],
+    "gridTemplate": "\"nav nav\" \"toolbar toolbar\" \"content content\" / 1fr"
+  },
+  "componentFinishes": [
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        },
+        {
+          "token": "secondary",
+          "weight": "medium",
+          "context": "secondary-action",
+          "application": "Outline/border on secondary buttons, selected tabs"
+        },
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Button",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Input",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "accent",
+          "weight": "medium",
+          "context": "accent-highlight",
+          "application": "Badges, notification dots, progress bar fills, inline links"
+        },
+        {
+          "token": "success",
+          "weight": "subtle",
+          "context": "success-state",
+          "application": "Success badges, check marks, positive metric indicators"
+        },
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Badge",
+      "hierarchyPattern": {
+        "name": "caption",
+        "level": "detail",
+        "colorToken": "mutedForeground",
+        "fontWeight": 400,
+        "letterSpacing": "0.01em",
+        "typographyScaleIndex": 1
+      }
+    },
+    {
+      "elevation": {
+        "name": "sticky",
+        "level": 4,
+        "usage": "Sticky headers, fixed navigation bars",
+        "shadow": "0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04)"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        }
+      ],
+      "componentName": "Navigation",
+      "hierarchyPattern": {
+        "name": "section-heading",
+        "level": "section",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "-0.01em",
+        "typographyScaleIndex": 5
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [],
+      "componentName": "Table",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+/**
+ * The activity timeline's own rules. Only the spacing, radius, type and COLOUR
+ * TOKENS the app already ships are used — this file declares no colour.
+ */
+
+.task-activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.task-activity-count {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.activity-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.activity-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.activity-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.activity-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.activity-entry:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.activity-entry-icon {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-subtle);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+
+.activity-entry-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.activity-entry-label {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.activity-entry-change {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.activity-entry-meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.activity-entry-actor {
+  font-weight: 600;
+}
+
+@media (max-width: 40rem) {
+  .activity-entry-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--text-xs);
+  }
+}

@@ -1,0 +1,27 @@
+/**
+ * PAGE GUTTERS for the app frame.
+ *
+ * Every screen of this app draws its own heading (each entry in the page list
+ * sets `heading: false`), so the fixed shell renders the page inside a bare
+ * `.site-main` band — which carries no content column and no padding of its
+ * own, and the screens therefore ran edge to edge with no left or right
+ * spacing.
+ *
+ * These rules give that band exactly the reading column and the horizontal /
+ * vertical spacing the frame gives a page whose heading it draws itself
+ * (`.site-main-page`), using only the shared spacing tokens from theme.css.
+ * No colour is declared here.
+ */
+
+.site-shell > .site-main {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-5) var(--space-7);
+}
+
+@media (max-width: 720px) {
+  .site-shell > .site-main {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+}

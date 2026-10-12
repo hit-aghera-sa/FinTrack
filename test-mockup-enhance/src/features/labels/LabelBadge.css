@@ -1,0 +1,80 @@
+/* The label chip. Every colour is one of the project's existing tokens; a shade
+   the palette does not name is derived with color-mix. No literal colour here. */
+
+.label-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  max-width: 14rem;
+  padding: 0.125rem var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--color-subtle);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.label-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.label-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.label-chip-remove:hover {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.label-chip--primary {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.label-chip--info {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+  border-color: color-mix(in srgb, var(--color-info-text) 30%, transparent);
+}
+
+.label-chip--success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  border-color: color-mix(in srgb, var(--color-success-text) 30%, transparent);
+}
+
+.label-chip--warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-color: color-mix(in srgb, var(--color-warning-text) 30%, transparent);
+}
+
+.label-chip--danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: color-mix(in srgb, var(--color-danger-text) 30%, transparent);
+}
+
+.label-chip--neutral {
+  background: var(--color-subtle);
+  color: var(--color-muted);
+  border-color: var(--color-border-strong);
+}

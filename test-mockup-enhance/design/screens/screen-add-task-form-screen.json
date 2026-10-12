@@ -1,0 +1,181 @@
+{
+  "title": "Add task form screen",
+  "aaPass": true,
+  "screenKey": "screen-add-task-form-screen",
+  "components": [
+    "Navigation",
+    "Card",
+    "Input",
+    "Tabs",
+    "Button"
+  ],
+  "gridTemplate": "\"nav\" \"content\" \"actions\" / 1fr",
+  "templateName": "form-page",
+  "layoutTemplate": {
+    "name": "form-page",
+    "regions": [
+      {
+        "name": "navigation",
+        "gridArea": "nav",
+        "elevation": 4,
+        "components": [
+          "Navigation"
+        ]
+      },
+      {
+        "name": "content",
+        "gridArea": "content",
+        "elevation": 1,
+        "components": [
+          "Card",
+          "Input",
+          "Tabs"
+        ]
+      },
+      {
+        "name": "actions",
+        "gridArea": "actions",
+        "elevation": 2,
+        "components": [
+          "Button"
+        ]
+      }
+    ],
+    "description": "Full-page form with grouped fields and action bar",
+    "suitableFor": [
+      "form",
+      "create",
+      "edit",
+      "settings",
+      "wizard",
+      "intake",
+      "config"
+    ],
+    "gridTemplate": "\"nav\" \"content\" \"actions\" / 1fr"
+  },
+  "componentFinishes": [
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        },
+        {
+          "token": "secondary",
+          "weight": "medium",
+          "context": "secondary-action",
+          "application": "Outline/border on secondary buttons, selected tabs"
+        },
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Button",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Input",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "raised",
+        "level": 1,
+        "usage": "Cards, panels, popovers at rest",
+        "shadow": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)"
+      },
+      "accentRules": [],
+      "componentName": "Card",
+      "hierarchyPattern": {
+        "name": "card-title",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 4
+      }
+    },
+    {
+      "elevation": {
+        "name": "sticky",
+        "level": 4,
+        "usage": "Sticky headers, fixed navigation bars",
+        "shadow": "0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04)"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        }
+      ],
+      "componentName": "Navigation",
+      "hierarchyPattern": {
+        "name": "section-heading",
+        "level": "section",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "-0.01em",
+        "typographyScaleIndex": 5
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [],
+      "componentName": "Tabs",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    }
+  ]
+}

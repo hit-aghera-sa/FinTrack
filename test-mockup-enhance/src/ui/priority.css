@@ -1,0 +1,96 @@
+/*
+ * PRIORITY DESIGN TOKENS, and the look of the two shared priority controls.
+ *
+ * COLOUR IS NOT INVENTED HERE. The three pairs below (low / medium / high,
+ * foreground "ink" and background "surface") are ALIASES over colour tokens the
+ * frozen theme already declares, so the dark palette keeps working and no new
+ * --color-* property is introduced anywhere:
+ *
+ *   low    -> the theme's info pair    (calm, nothing urgent)
+ *   medium -> the theme's warning pair (the default level)
+ *   high   -> the theme's danger pair  (needs attention)
+ *
+ * Each pair clears WCAG AA for normal body text in the light palette
+ * (info ~6.6:1, warning ~5.6:1, danger ~6.0:1), and the badge never relies on
+ * colour alone: it always renders the level's NAME plus a per-level shape.
+ */
+
+:root {
+  /* Priority — Low */
+  --ui-priority-low-surface: var(--color-info-bg);
+  --ui-priority-low-ink: var(--color-info-text);
+
+  /* Priority — Medium (the default) */
+  --ui-priority-medium-surface: var(--color-warning-bg);
+  --ui-priority-medium-ink: var(--color-warning-text);
+
+  /* Priority — High */
+  --ui-priority-high-surface: var(--color-danger-bg);
+  --ui-priority-high-ink: var(--color-danger-text);
+}
+
+/* ── The badge ──────────────────────────────────────────────────────────── */
+
+.ui-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.125rem var(--space-2);
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* The shape beside the name: the second, non-colour signal of the level. */
+.ui-priority-badge__mark {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+}
+
+.ui-priority-badge__text {
+  display: inline-block;
+}
+
+.ui-priority-badge--low {
+  background: var(--ui-priority-low-surface);
+  color: var(--ui-priority-low-ink);
+}
+
+/* Low: a circle. */
+.ui-priority-badge--low .ui-priority-badge__mark {
+  border-radius: var(--radius-pill);
+}
+
+.ui-priority-badge--medium {
+  background: var(--ui-priority-medium-surface);
+  color: var(--ui-priority-medium-ink);
+}
+
+/* Medium: a square. */
+.ui-priority-badge--medium .ui-priority-badge__mark {
+  border-radius: 1px;
+}
+
+.ui-priority-badge--high {
+  background: var(--ui-priority-high-surface);
+  color: var(--ui-priority-high-ink);
+}
+
+/* High: a diamond. */
+.ui-priority-badge--high .ui-priority-badge__mark {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+/* ── The select ─────────────────────────────────────────────────────────── */
+
+.ui-priority-field {
+  min-width: 10rem;
+}

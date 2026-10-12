@@ -1,0 +1,127 @@
+// Prisma schema for the team task board.
+//
+// GENERATED CLIENT LOCATION. The client is generated into
+// `node_modules/.prisma-client` rather than the default
+// `node_modules/.prisma/client`. The build runs `prisma generate` more than
+// once (install hook, prebuild, build:app) and the default directory's query
+// engine stays mapped by any process that has used the client, which makes the
+// regeneration fail on Windows with
+//
+//   EPERM: operation not permitted, rename …query_engine-windows.dll.node.tmp…
+//
+// and takes the whole build down with it. A dedicated output directory means
+// generation never has to replace a file another process is holding open.
+// Every module imports the client through `src/db/generated.ts`, so this path
+// is written down exactly once.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The three board columns.
+enum TaskStatus {
+  todo
+  doing
+  done
+}
+
+/// How urgent a task is, from least to most urgent.
+enum TaskPriority {
+  Low
+  Medium
+  High
+}
+
+model TeamMember {
+  id    String @id @default(cuid())
+  name  String
+  role  String
+  tasks Task[]
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  description String       @default("")
+  assigneeId  String?
+  assignee    TeamMember?  @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate     DateTime?
+  status      TaskStatus   @default(todo)
+  priority    TaskPriority @default(Medium)
+  createdAt   DateTime     @default(now())
+  comments    Comment[]
+  /// Everything that has happened to this task, newest first when read.
+  /// Removing the task removes its activity rows (cascade).
+  activity    TaskActivity[]
+  /// This task's checklist items, listed by `position` (creation order).
+  /// Removing the task removes its checklist (cascade).
+  checklist   ChecklistItem[]
+  /// The labels this task carries. Joined through the TaskLabel relation.
+  labels      Label[]      @relation("TaskLabel")
+}
+
+/// A reusable label a task can carry. `name` is unique across the board, and
+/// `color` holds the NAME of a design token (see LABEL_COLORS in
+/// src/models/label.ts) — never a literal colour value.
+model Label {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("neutral")
+  /// The tasks carrying this label. Joined through the TaskLabel relation.
+  tasks Task[] @relation("TaskLabel")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+}
+
+/// One thing that happened to a task: a field that moved (with `field`,
+/// `fromValue` and `toValue`) or a note (with `message`). `kind` holds one of
+/// the TaskActivityKind values declared in src/models/activity.ts, and `actor`
+/// is a person's name as typed — this product has no accounts.
+///
+/// The `(taskId, createdAt)` index backs the newest-first feed query.
+model TaskActivity {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  kind      String
+  field     String?
+  fromValue String?
+  toValue   String?
+  actor     String?
+  message   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([taskId, createdAt])
+}
+
+/// One checklist item of one task.
+///
+/// `position` fixes the display order and is assigned once, when the item is
+/// created — there is no reordering. `done` is independent of the task's
+/// status: ticking every item never moves the task to Done. Removing the task
+/// removes its whole checklist (cascade).
+///
+/// The `(taskId, position)` index backs the ordered read of one task's items.
+model ChecklistItem {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title     String
+  done      Boolean  @default(false)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([taskId, position])
+}

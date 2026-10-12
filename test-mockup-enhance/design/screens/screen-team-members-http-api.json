@@ -1,0 +1,172 @@
+{
+  "title": "Team members HTTP API",
+  "aaPass": true,
+  "screenKey": "screen-team-members-http-api",
+  "components": [
+    "Navigation",
+    "Avatar",
+    "Card",
+    "Badge",
+    "Table"
+  ],
+  "gridTemplate": "\"nav nav\" \"sidebar main\" / 240px 1fr",
+  "templateName": "dashboard",
+  "layoutTemplate": {
+    "name": "dashboard",
+    "regions": [
+      {
+        "name": "navigation",
+        "gridArea": "nav",
+        "elevation": 4,
+        "components": [
+          "Navigation"
+        ]
+      },
+      {
+        "name": "sidebar",
+        "gridArea": "sidebar",
+        "elevation": 1,
+        "components": [
+          "Navigation",
+          "Avatar"
+        ]
+      },
+      {
+        "name": "main",
+        "gridArea": "main",
+        "elevation": 0,
+        "components": [
+          "Card",
+          "Badge",
+          "Table"
+        ]
+      }
+    ],
+    "description": "Multi-metric overview with stat tiles and charts",
+    "suitableFor": [
+      "dashboard",
+      "analytics",
+      "overview",
+      "home"
+    ],
+    "gridTemplate": "\"nav nav\" \"sidebar main\" / 240px 1fr"
+  },
+  "componentFinishes": [
+    {
+      "elevation": {
+        "name": "raised",
+        "level": 1,
+        "usage": "Cards, panels, popovers at rest",
+        "shadow": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)"
+      },
+      "accentRules": [],
+      "componentName": "Card",
+      "hierarchyPattern": {
+        "name": "card-title",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 4
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [
+        {
+          "token": "accent",
+          "weight": "medium",
+          "context": "accent-highlight",
+          "application": "Badges, notification dots, progress bar fills, inline links"
+        },
+        {
+          "token": "success",
+          "weight": "subtle",
+          "context": "success-state",
+          "application": "Success badges, check marks, positive metric indicators"
+        },
+        {
+          "token": "error",
+          "weight": "subtle",
+          "context": "error-state",
+          "application": "Error badges, validation messages, destructive button fills"
+        }
+      ],
+      "componentName": "Badge",
+      "hierarchyPattern": {
+        "name": "caption",
+        "level": "detail",
+        "colorToken": "mutedForeground",
+        "fontWeight": 400,
+        "letterSpacing": "0.01em",
+        "typographyScaleIndex": 1
+      }
+    },
+    {
+      "elevation": {
+        "name": "sticky",
+        "level": 4,
+        "usage": "Sticky headers, fixed navigation bars",
+        "shadow": "0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04)"
+      },
+      "accentRules": [
+        {
+          "token": "primary",
+          "weight": "bold",
+          "context": "primary-action",
+          "application": "Background fill on primary CTA buttons and active nav items"
+        }
+      ],
+      "componentName": "Navigation",
+      "hierarchyPattern": {
+        "name": "section-heading",
+        "level": "section",
+        "colorToken": "foreground",
+        "fontWeight": 600,
+        "letterSpacing": "-0.01em",
+        "typographyScaleIndex": 5
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [],
+      "componentName": "Table",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    },
+    {
+      "elevation": {
+        "name": "flat",
+        "level": 0,
+        "usage": "Inline content, table rows, list items",
+        "shadow": "none"
+      },
+      "accentRules": [],
+      "componentName": "Avatar",
+      "hierarchyPattern": {
+        "name": "body-text",
+        "level": "content",
+        "colorToken": "foreground",
+        "fontWeight": 400,
+        "letterSpacing": "0",
+        "typographyScaleIndex": 2
+      }
+    }
+  ]
+}

@@ -380,7 +380,7 @@ describe("BoardPage", () => {
     fireEvent.click(within(card).getByRole("button", { name: "Open" }));
     expect(onOpenTask).toHaveBeenCalledWith("t-release");
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Add task/ })[0] as HTMLElement);
+    fireEvent.click(screen.getAllByRole("button", { name: /New task/ })[0] as HTMLElement);
     expect(onAddTask).toHaveBeenCalledTimes(1);
   });
 });

@@ -27,7 +27,7 @@ import {
 
 /**
  * The board screen's contract with the shell: opening a card and the
- * "Add task" action are raised to the host, which owns navigation to
+ * "New task" action are raised to the host, which owns navigation to
  * `/tasks/:id` and `/tasks/new`.
  */
 export interface BoardPageProps {
@@ -165,7 +165,7 @@ export function BoardPageWithApi({
         </div>
         <div className="page-actions">
           <Button variant="primary" onClick={onAddTask}>
-            + Add task
+            + New task
           </Button>
         </div>
       </header>
@@ -182,10 +182,10 @@ export function BoardPageWithApi({
       {boardIsEmpty ? (
         <EmptyState
           title="No tasks on the board yet"
-          message="Tasks you add appear in the To do column. Use Add task to create the first one."
+          message="Tasks you add appear in the To do column. Use New task to create the first one."
           action={
             <Button variant="primary" onClick={onAddTask}>
-              + Add task
+              + New task
             </Button>
           }
         />

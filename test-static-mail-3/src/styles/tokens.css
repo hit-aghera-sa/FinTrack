@@ -1,0 +1,117 @@
+/*
+ * QuickList - design tokens
+ * ---------------------------------------------------------------------------
+ * The colour palette below is the APPROVED, PINNED design palette. Never add a
+ * new hex literal anywhere in src/: reference these custom properties instead.
+ * (The `test:visual-diff` gate scans src/ and fails on unknown hex literals.)
+ *
+ * TYPE SCALE: the pinned design declares ONE type step - the 16px base. Every
+ * `--font-size-*` alias therefore resolves to that single step; the names are
+ * kept so existing consumers keep working, and hierarchy is expressed with
+ * weight, letter-spacing, colour and spacing instead of size (see
+ * ./typography.css).
+ */
+
+:root {
+  /* ----- Palette (pinned) ------------------------------------------------ */
+  --color-background: #FFFFFF;
+  --color-foreground: #1A1A1A;
+
+  --color-primary: #1B2A4A;
+  --color-primaryforeground: #FFFFFF;
+
+  --color-secondary: #2D5016;
+  --color-secondaryforeground: #FFFFFF;
+
+  --color-accent: #E87C0F;
+  --color-accentforeground: #000000;
+
+  --color-success: #0D7A36;
+  --color-successforeground: #FFFFFF;
+
+  --color-error: #DC2626;
+  --color-errorforeground: #FFFFFF;
+
+  --color-muted: #F5F5F5;
+  --color-mutedforeground: #595F69;
+
+  --color-border: #E5E7EB;
+
+  /* ----- Semantic aliases ------------------------------------------------ */
+  --surface: var(--color-background);
+  --surface-muted: var(--color-muted);
+  --text-strong: var(--color-foreground);
+  --text-muted: var(--color-mutedforeground);
+  --text-brand: var(--color-primary);
+  --text-danger: var(--color-error);
+  --border-color: var(--color-border);
+  --border-color-strong: var(--color-mutedforeground);
+
+  /* ----- Typography ------------------------------------------------------ */
+  --font-family-base: 'Inter', sans-serif;
+  --font-family-heading: var(--font-family-base);
+
+  /* The pinned base size - the only size in the scale. */
+  --font-size-base: 16px;
+
+  /*
+   * Single-step scale. Each alias is kept for compatibility with existing
+   * consumers but resolves to the pinned 16px step, so no rendered string can
+   * land off the approved type scale.
+   */
+  --font-size-xs: 1rem;   /* 16px */
+  --font-size-sm: 1rem;   /* 16px */
+  --font-size-md: 1rem;   /* 16px */
+  --font-size-lg: 1rem;   /* 16px */
+  --font-size-xl: 1rem;   /* 16px */
+  --font-size-2xl: 1rem;  /* 16px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-wide: 0.04em;
+
+  /* ----- Spacing scale (4px base) ---------------------------------------- */
+  --space-0: 0;
+  --space-1: 0.25rem;  /* 4px  */
+  --space-2: 0.5rem;   /* 8px  */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-7: 2.5rem;   /* 40px */
+  --space-8: 3rem;     /* 48px */
+
+  /* ----- Radii ----------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* ----- Borders & elevation --------------------------------------------- */
+  --border-width: 1px;
+  --border-width-thick: 3px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
+
+  /* ----- Layout ---------------------------------------------------------- */
+  --layout-max-width: 44rem;
+  --layout-gutter: var(--space-5);
+  --control-height: 2.75rem;
+  --row-min-height: 3rem;
+
+  /* ----- Motion & focus --------------------------------------------------- */
+  --transition-fast: 120ms ease;
+  --transition-base: 180ms ease;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-primary);
+}

@@ -1,0 +1,139 @@
+/*
+ * QuickList typography layer - the PINNED single-step type scale.
+ * ---------------------------------------------------------------------------
+ * The approved design pins exactly one type size: the 16px base. Anything that
+ * renders at another size (a browser default <h1> at 2em/32px, a component's
+ * own 0.875rem/14px meta line) is a design-fidelity defect, so this layer is
+ * the last word on font-size.
+ *
+ * Hierarchy is therefore carried by WEIGHT, LETTER-SPACING, COLOUR and SPACING
+ * - never by size. Every colour referenced here is a pinned token, and every
+ * text/background pair clears WCAG AA at 16px (4.5:1).
+ *
+ * Loaded last from ./index.css so it layers over tokens.css and quicklist.css.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. One step, everywhere.
+ *
+ * `!important` is deliberate: component lanes ship their styles inside a
+ * <style> element rendered WITH their markup, i.e. later in the document than
+ * this sheet, so an equal-specificity class rule there would otherwise win and
+ * reintroduce an off-scale size. The same rule also neutralises the user-agent
+ * defaults for headings and small print.
+ * ------------------------------------------------------------------------ */
+
+body,
+body * {
+  font-size: var(--font-size-md) !important;
+}
+
+/* Belt and braces for the UA-shrunk inline elements. */
+small,
+sub,
+sup,
+code,
+kbd,
+samp,
+pre {
+  font-size: var(--font-size-md);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Headings: distinct by weight, tracking and colour at the pinned size.
+ * ------------------------------------------------------------------------ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+h2,
+h3 {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-strong);
+}
+
+h4,
+h5,
+h6 {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Form controls inherit the family and tracking (the size is pinned above).
+ * ------------------------------------------------------------------------ */
+
+button,
+input,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Meta / secondary lines stay clearly secondary WITHOUT shrinking: wider
+ *    tracking plus the muted foreground token (#595F69 on the page surface,
+ *    ~5.9:1 - comfortably AA at 16px).
+ * ------------------------------------------------------------------------ */
+
+.quicklist-footer,
+.quicklist-filter-label,
+.quicklist-subtitle,
+.quicklist-empty,
+.controls-footer__summary,
+.controls-empty {
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. The error line never reads as body copy: it keeps its own weight in
+ *    addition to the danger colour and its leading icon-free wording, so the
+ *    state is never signalled by colour alone.
+ * ------------------------------------------------------------------------ */
+
+.quicklist-error,
+.controls-error {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-base);
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Done rows: the strikethrough (not a size or colour change) remains the
+ *    signal, so keep the struck text at full weight and readable contrast.
+ * ------------------------------------------------------------------------ */
+
+.task-done {
+  font-weight: var(--font-weight-regular);
+  color: var(--text-muted);
+  text-decoration-line: line-through;
+  text-decoration-thickness: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Selected filter: weight is one of the three non-colour signals (fill and
+ *    border being the others).
+ * ------------------------------------------------------------------------ */
+
+.quicklist-filter.is-selected,
+.quicklist-filter[aria-pressed='true'],
+.quicklist-filter[aria-current='true'] {
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+}

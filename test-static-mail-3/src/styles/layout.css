@@ -1,0 +1,166 @@
+/*
+ * QuickList layout layer — the one-screen page skeleton.
+ *
+ * Expected markup shape (see README.md for the full contract):
+ *
+ *   <main class="quicklist-app">
+ *     <header class="quicklist-header">
+ *       <h1 class="quicklist-heading">QuickList</h1>
+ *       <p class="quicklist-subheading">…</p>
+ *     </header>
+ *     <form class="quicklist-input-row"> … </form>
+ *     <p class="quicklist-error"> … </p>
+ *     <div class="quicklist-filter-row"> … </div>
+ *     <ul class="quicklist-list"> … </ul>
+ *     <p class="quicklist-empty"> … </p>
+ *     <footer class="quicklist-footer"> … </footer>
+ *   </main>
+ */
+
+.quicklist-app {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--ql-app-max-width);
+  margin-inline: auto;
+  margin-block: var(--ql-space-7);
+  padding: var(--ql-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ql-space-5);
+
+  background-color: var(--ql-color-surface);
+  border: var(--ql-border-width) solid var(--ql-color-border);
+  border-radius: var(--ql-radius-lg);
+  box-shadow: var(--ql-shadow-md);
+}
+
+/* ---------------------------------------------------------------------------
+ * Heading block
+ * ------------------------------------------------------------------------ */
+
+.quicklist-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ql-space-1);
+}
+
+.quicklist-heading {
+  font-size: var(--ql-text-xl);
+  line-height: var(--ql-leading-tight);
+  font-weight: var(--ql-weight-bold);
+  letter-spacing: var(--ql-tracking-tight);
+  color: var(--ql-color-text);
+}
+
+.quicklist-subheading {
+  font-size: var(--ql-text-sm);
+  line-height: var(--ql-leading-snug);
+  color: var(--ql-color-text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * Input row — text field plus the add action
+ * ------------------------------------------------------------------------ */
+
+.quicklist-input-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--ql-space-2);
+  width: 100%;
+}
+
+.quicklist-input-row > .quicklist-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.quicklist-input-row > .quicklist-add {
+  flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * Filter row
+ * ------------------------------------------------------------------------ */
+
+.quicklist-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ql-space-2);
+  padding-block: var(--ql-space-1);
+  border-block-end: var(--ql-border-width) solid var(--ql-color-border);
+  padding-block-end: var(--ql-space-3);
+}
+
+/* ---------------------------------------------------------------------------
+ * List
+ * ------------------------------------------------------------------------ */
+
+.quicklist-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ql-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Footer
+ * ------------------------------------------------------------------------ */
+
+.quicklist-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ql-space-2);
+
+  padding-block-start: var(--ql-space-4);
+  border-block-start: var(--ql-border-width) solid var(--ql-color-border);
+
+  font-size: var(--ql-text-xs);
+  line-height: var(--ql-leading-snug);
+  letter-spacing: var(--ql-tracking-wide);
+  color: var(--ql-color-text-muted);
+}
+
+.quicklist-footer__count {
+  font-weight: var(--ql-weight-medium);
+  color: var(--ql-color-text);
+}
+
+/* ---------------------------------------------------------------------------
+ * Responsive
+ * ------------------------------------------------------------------------ */
+
+@media (min-width: 480px) {
+  .quicklist-heading {
+    font-size: var(--ql-text-2xl);
+  }
+}
+
+@media (max-width: 479px) {
+  .quicklist-app {
+    margin-block: var(--ql-space-4);
+    margin-inline: var(--ql-space-3);
+    padding: var(--ql-space-4);
+    gap: var(--ql-space-4);
+    border-radius: var(--ql-radius-md);
+  }
+
+  /* Stack the field above a full-width add button on narrow screens. */
+  .quicklist-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quicklist-input-row > .quicklist-add {
+    width: 100%;
+  }
+
+  .quicklist-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

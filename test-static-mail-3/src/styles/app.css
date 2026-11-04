@@ -1,0 +1,2 @@
+/* Alias entry - see ./index.css (the canonical stylesheet entry point). */
+@import './index.css';

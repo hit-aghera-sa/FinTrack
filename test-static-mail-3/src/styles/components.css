@@ -1,0 +1,315 @@
+/*
+ * QuickList component layer — the stable class-name contract.
+ *
+ * These names are consumed verbatim by the frontend lanes and by the e2e specs:
+ *   quicklist-app, quicklist-input, quicklist-filter, is-selected,
+ *   task-row, task-done, task-remove, quicklist-footer, quicklist-error,
+ *   quicklist-empty
+ * Do not rename or namespace them.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Text field
+ * ------------------------------------------------------------------------ */
+
+.quicklist-input {
+  display: block;
+  width: 100%;
+  min-height: var(--ql-control-height);
+  padding: var(--ql-space-2) var(--ql-space-3);
+
+  font-size: var(--ql-text-md);
+  line-height: var(--ql-leading-snug);
+  color: var(--ql-color-text);
+
+  background-color: var(--ql-color-surface);
+  border: var(--ql-border-width) solid var(--ql-color-border-strong);
+  border-radius: var(--ql-radius-md);
+  box-shadow: var(--ql-shadow-inset);
+
+  transition:
+    border-color var(--ql-duration-fast) var(--ql-ease-standard),
+    box-shadow var(--ql-duration-fast) var(--ql-ease-standard);
+}
+
+.quicklist-input::placeholder {
+  color: var(--ql-color-text-muted);
+  opacity: 1;
+}
+
+.quicklist-input:hover:not(:disabled) {
+  border-color: var(--ql-color-accent);
+}
+
+.quicklist-input:focus-visible {
+  border-color: var(--ql-color-accent);
+  outline: var(--ql-focus-ring-width) solid var(--ql-color-focus);
+  outline-offset: 1px;
+}
+
+.quicklist-input:disabled {
+  background-color: var(--ql-color-surface-sunken);
+  color: var(--ql-color-text-muted);
+}
+
+/* Invalid state pairs with .quicklist-error below. */
+.quicklist-input[aria-invalid="true"] {
+  border-color: var(--ql-color-danger);
+}
+
+/* ---------------------------------------------------------------------------
+ * Primary action (add)
+ * ------------------------------------------------------------------------ */
+
+.quicklist-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ql-control-height);
+  padding-inline: var(--ql-space-5);
+
+  font-size: var(--ql-text-md);
+  font-weight: var(--ql-weight-semibold);
+  line-height: var(--ql-leading-tight);
+  white-space: nowrap;
+
+  color: var(--ql-color-accent-on);
+  background-color: var(--ql-color-accent);
+  border: var(--ql-border-width) solid var(--ql-color-accent);
+  border-radius: var(--ql-radius-md);
+  box-shadow: var(--ql-shadow-xs);
+
+  transition:
+    background-color var(--ql-duration-fast) var(--ql-ease-standard),
+    border-color var(--ql-duration-fast) var(--ql-ease-standard);
+}
+
+.quicklist-add:hover:not(:disabled) {
+  background-color: var(--ql-color-accent-hover);
+  border-color: var(--ql-color-accent-hover);
+}
+
+.quicklist-add:active:not(:disabled) {
+  background-color: var(--ql-color-accent-active);
+  border-color: var(--ql-color-accent-active);
+}
+
+.quicklist-add:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Filters — .quicklist-filter, selected via .is-selected (and/or aria-pressed)
+ * ------------------------------------------------------------------------ */
+
+.quicklist-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ql-control-height-sm);
+  padding: var(--ql-space-1) var(--ql-space-3);
+
+  font-size: var(--ql-text-sm);
+  font-weight: var(--ql-weight-medium);
+  line-height: var(--ql-leading-tight);
+  white-space: nowrap;
+
+  color: var(--ql-color-text-muted);
+  background-color: transparent;
+  border: var(--ql-border-width) solid var(--ql-color-border);
+  border-radius: var(--ql-radius-pill);
+
+  transition:
+    color var(--ql-duration-fast) var(--ql-ease-standard),
+    background-color var(--ql-duration-fast) var(--ql-ease-standard),
+    border-color var(--ql-duration-fast) var(--ql-ease-standard);
+}
+
+.quicklist-filter:hover:not(:disabled) {
+  color: var(--ql-color-text);
+  background-color: var(--ql-color-surface-hover);
+  border-color: var(--ql-color-border-strong);
+}
+
+/*
+ * Selected filter: filled accent chip. Distinct by THREE independent signals —
+ * fill, weight and an underline rule — so it never relies on colour alone.
+ * Both the class and the ARIA state are honoured, whichever the lane emits.
+ */
+.quicklist-filter.is-selected,
+.quicklist-filter[aria-pressed="true"],
+.quicklist-filter[aria-current="true"] {
+  color: var(--ql-color-accent-on);
+  background-color: var(--ql-color-accent);
+  border-color: var(--ql-color-accent);
+  font-weight: var(--ql-weight-semibold);
+  box-shadow: var(--ql-shadow-xs);
+}
+
+.quicklist-filter.is-selected:hover,
+.quicklist-filter[aria-pressed="true"]:hover,
+.quicklist-filter[aria-current="true"]:hover {
+  color: var(--ql-color-accent-on);
+  background-color: var(--ql-color-accent-hover);
+  border-color: var(--ql-color-accent-hover);
+}
+
+@media (forced-colors: active) {
+  .quicklist-filter.is-selected,
+  .quicklist-filter[aria-pressed="true"] {
+    border-width: var(--ql-border-width-strong);
+    text-decoration: underline;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Task rows
+ * ------------------------------------------------------------------------ */
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ql-space-3);
+  min-height: var(--ql-control-height);
+  padding: var(--ql-space-2) var(--ql-space-3);
+
+  background-color: var(--ql-color-surface);
+  border: var(--ql-border-width) solid transparent;
+  border-radius: var(--ql-radius-md);
+
+  transition:
+    background-color var(--ql-duration-fast) var(--ql-ease-standard),
+    border-color var(--ql-duration-fast) var(--ql-ease-standard);
+}
+
+.task-row + .task-row {
+  border-block-start-color: var(--ql-color-border);
+  border-start-start-radius: var(--ql-radius-md);
+  border-start-end-radius: var(--ql-radius-md);
+}
+
+.task-row:hover {
+  background-color: var(--ql-color-surface-hover);
+  border-color: var(--ql-color-border);
+}
+
+/* The toggle control (checkbox) sitting at the row start. */
+.task-row__checkbox {
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--ql-color-accent);
+  cursor: pointer;
+}
+
+/* The task text. Clicking the label toggles when wired to the checkbox. */
+.task-row__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--ql-text-md);
+  line-height: var(--ql-leading-snug);
+  color: var(--ql-color-text);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+/*
+ * Done state. The class may sit on the row or on the label — support both, and
+ * keep the struck text at >=4.5:1 so it stays readable rather than "greyed out".
+ */
+.task-done,
+.task-row.task-done .task-row__label,
+.task-row .task-row__label.task-done {
+  text-decoration-line: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: currentColor;
+  color: var(--ql-color-text-done);
+}
+
+.task-row.task-done {
+  background-color: var(--ql-color-surface-sunken);
+}
+
+/* ---------------------------------------------------------------------------
+ * Remove control — small, secondary, destructive-on-intent only
+ * ------------------------------------------------------------------------ */
+
+.task-remove {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ql-control-height-sm);
+  padding: var(--ql-space-1) var(--ql-space-2);
+
+  font-size: var(--ql-text-sm);
+  font-weight: var(--ql-weight-medium);
+  line-height: var(--ql-leading-tight);
+  white-space: nowrap;
+
+  color: var(--ql-color-text-muted);
+  background-color: transparent;
+  border: var(--ql-border-width) solid transparent;
+  border-radius: var(--ql-radius-sm);
+
+  transition:
+    color var(--ql-duration-fast) var(--ql-ease-standard),
+    background-color var(--ql-duration-fast) var(--ql-ease-standard),
+    border-color var(--ql-duration-fast) var(--ql-ease-standard);
+}
+
+.task-remove:hover:not(:disabled),
+.task-remove:focus-visible {
+  color: var(--ql-color-danger);
+  background-color: var(--ql-color-danger-soft);
+  border-color: var(--ql-color-danger-border);
+}
+
+.task-remove:active:not(:disabled) {
+  color: var(--ql-color-danger-hover);
+}
+
+/* ---------------------------------------------------------------------------
+ * Error line
+ * ------------------------------------------------------------------------ */
+
+.quicklist-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ql-space-2);
+  padding: var(--ql-space-2) var(--ql-space-3);
+
+  font-size: var(--ql-text-sm);
+  line-height: var(--ql-leading-snug);
+  font-weight: var(--ql-weight-medium);
+  color: var(--ql-color-danger);
+
+  background-color: var(--ql-color-danger-soft);
+  border: var(--ql-border-width) solid var(--ql-color-danger-border);
+  border-inline-start-width: var(--ql-border-width-strong);
+  border-radius: var(--ql-radius-sm);
+}
+
+/* Hidden without unmounting, so the live region keeps its identity. */
+.quicklist-error:empty,
+.quicklist-error[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Empty state
+ * ------------------------------------------------------------------------ */
+
+.quicklist-empty {
+  padding: var(--ql-space-6) var(--ql-space-4);
+  text-align: center;
+
+  font-size: var(--ql-text-sm);
+  line-height: var(--ql-leading-normal);
+  color: var(--ql-color-text-muted);
+
+  background-color: var(--ql-color-surface-sunken);
+  border: var(--ql-border-width) dashed var(--ql-color-border-strong);
+  border-radius: var(--ql-radius-md);
+}

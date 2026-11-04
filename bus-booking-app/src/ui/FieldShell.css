@@ -1,0 +1,32 @@
+/* Field wrapper rules the approved stylesheet does not already carry. Mobile-first: comfortable
+   touch targets and 16px text on a phone, so Android browsers never zoom on focus. */
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ui-field .input {
+  min-height: 2.75rem;
+  font-size: 1rem;
+}
+
+.ui-field-required {
+  color: var(--color-error);
+}
+
+/* The message carries the word "Error" too — colour is never the only signal. */
+.ui-field-error {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.ui-field.has-error .input {
+  border-color: var(--color-error);
+}
+
+@media (min-width: 48rem) {
+  .ui-field .input {
+    min-height: 2.5rem;
+  }
+}

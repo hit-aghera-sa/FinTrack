@@ -1,0 +1,6 @@
+/* GENERATED — do not edit. The approved preview hides each surface in CSS and reveals the active
+ * one from its own script. The application routes instead of scripting, and the route table mounts
+ * exactly one frame at a time, so each is simply shown with the display the preview gave it.
+ * Imported AFTER the approved stylesheet: same specificity, so the later rule wins. */
+#auth-frame { display: block; }
+#app-frame { display: grid; }

@@ -1,0 +1,193 @@
+/* The seat selection screen's own rules. Colours come only from the app's pinned tokens. */
+
+.seat-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.seat-selection-trip {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--color-background);
+}
+
+.seat-selection-trip-name {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.seat-selection-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.seat-selection-fact-label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-muted-foreground);
+}
+
+.seat-selection-fact-value {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.seat-selection-map {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--color-background);
+}
+
+.seat-selection-section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.seat-selection-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--color-muted-foreground);
+}
+
+.seat-selection-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seat-selection-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.seat-selection-swatch.is-booked {
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
+}
+
+.seat-selection-swatch.is-selected {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-success-foreground);
+}
+
+.seat-selection-deck {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seat-selection-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.seat-selection-seat {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 52px;
+  min-height: 48px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seat-selection-seat:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.seat-selection-seat:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.seat-selection-seat.is-booked {
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
+.seat-selection-seat.is-selected {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-success-foreground);
+}
+
+.seat-selection-seat-mark {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.seat-selection-boarding {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--color-background);
+}
+
+.seat-selection-summary {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--color-primary-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seat-selection-chosen,
+.seat-selection-total {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-foreground);
+}
+
+.seat-selection-total strong {
+  font-size: 18px;
+}
+
+.seat-selection-actions {
+  margin-top: 8px;
+}
+
+.seat-selection-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-muted-foreground);
+}

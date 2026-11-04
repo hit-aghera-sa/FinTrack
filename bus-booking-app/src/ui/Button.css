@@ -1,0 +1,40 @@
+/* Busy indicator for a button that is waiting on the server. Takes its colour from the button's own
+   text colour, so it works on every variant without naming a colour. */
+.ui-button-busy {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.5rem;
+  vertical-align: -0.0625rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ui-button-turn 0.8s linear infinite;
+}
+
+.button[aria-busy='true'] {
+  cursor: progress;
+}
+
+/* Phone-sized tap target first; desktop keeps the stylesheet's own height. */
+.button {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 48rem) {
+  .button {
+    min-height: 2.5rem;
+  }
+}
+
+@keyframes ui-button-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-button-busy {
+    animation-duration: 2.4s;
+  }
+}

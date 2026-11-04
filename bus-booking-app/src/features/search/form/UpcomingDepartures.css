@@ -1,0 +1,40 @@
+/* The "departing soon" shortcut under the approved search form. Layout only: every colour comes
+   from the approved palette's variables, and the card/badge primitives are reused as they are. */
+
+.upcoming-departures {
+  margin-top: var(--space-4, 1rem);
+}
+
+.upcoming-title {
+  margin: 0;
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+  margin: var(--space-3, 0.75rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.upcoming-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+}
+
+.upcoming-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.upcoming-route,
+.upcoming-when {
+  color: var(--color-text-muted, var(--color-text-secondary));
+}

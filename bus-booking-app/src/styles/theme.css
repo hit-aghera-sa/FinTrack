@@ -1,0 +1,40 @@
+/**
+ * Design tokens — the single source of colour, radius and spacing for this app.
+ * Change a colour HERE and it changes everywhere. Do not hard-code hex values in component styles.
+ */
+:root {
+  /* Surfaces */
+  --color-canvas: #f8fafc;
+  --color-surface: #ffffff;
+  --color-subtle: #f1f5f9;
+
+  /* Text */
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+
+  /* Brand */
+  --color-primary: #4338ca;
+  --color-primary-strong: #312e81;
+  --color-on-primary: #ffffff;
+
+  /* Lines */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  /* Navigation */
+  --color-sidebar-bg: #1e293b;
+  --color-sidebar-text: #e2e8f0;
+  --color-sidebar-hover: rgba(148, 163, 184, 0.2);
+
+  /* Status */
+  --color-success-bg: #dcfce7;
+  --color-success-text: #15803d;
+  --color-warning-bg: #fef9c3;
+  --color-warning-text: #a16207;
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #b91c1c;
+
+  /* Shape and rhythm */
+  --radius-md: 0.5rem;
+  --space: 0.25rem;
+}

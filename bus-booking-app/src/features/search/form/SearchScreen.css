@@ -1,0 +1,19 @@
+/* Layout rules of the bus search screen only: the approved card, its extra states and the inline
+   field messages. Colours come from the approved palette's variables — never a literal here. */
+
+.search-form-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 1rem);
+}
+
+.search-form-state {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+}
+
+.search-form-error {
+  margin: var(--space-1, 0.25rem) 0 0;
+  color: var(--color-error, var(--color-danger));
+}

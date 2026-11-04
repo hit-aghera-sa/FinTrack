@@ -1,0 +1,40 @@
+/* The dialog sits over the screen. The dim behind it is derived from the palette's own foreground
+   tone rather than a colour of its own. */
+.ui-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--color-foreground) 55%, transparent);
+}
+
+.ui-dialog {
+  width: 100%;
+  max-width: 28rem;
+  background: var(--color-background);
+}
+
+/* Phone first: full-width stacked answers, with the main answer on top of the stack. */
+.ui-dialog-actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+}
+
+.ui-dialog-actions .button {
+  width: 100%;
+}
+
+@media (min-width: 30rem) {
+  .ui-dialog-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .ui-dialog-actions .button {
+    width: auto;
+  }
+}

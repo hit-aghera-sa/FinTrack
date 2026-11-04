@@ -1,0 +1,168 @@
+// Bus Booking App — physical data model.
+//
+// Seat state lives on the per-trip Seat row: `bookingId` is null while the seat is free and carries
+// the holding booking once taken. With @@unique([tripId, seatNumber]) on Seat, a second booking for
+// the same seat cannot exist — double booking is impossible at the database level. Cancellation and
+// account deletion release seats by setting `bookingId` back to null; the seat numbers survive on
+// the booking's Passenger rows, so a cancelled ticket still reads correctly.
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  fullName           String
+  /// 10 digits, first digit 6/7/8/9. The login id, unique and immutable.
+  mobileNumber       String    @unique
+  passwordHash       String
+  /// Id of one of the four fixed security questions.
+  securityQuestionId String
+  /// bcrypt hash of the case-normalised security answer.
+  securityAnswerHash String
+  /// Consecutive failed log-in attempts since the last success.
+  failedLoginCount   Int       @default(0)
+  lockedUntil        DateTime?
+  /// Consecutive wrong security answers during password reset.
+  failedResetCount   Int       @default(0)
+  resetBlockedUntil  DateTime?
+  createdAt          DateTime  @default(now())
+
+  sessions Session[]
+  bookings Booking[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  /// The credential handed to the device.
+  token     String   @unique
+  userId    String
+  /// Device description, taken from the user agent.
+  userAgent String   @default("Unknown device")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model City {
+  id   String @id @default(uuid())
+  name String @unique
+
+  tripsFrom Trip[] @relation("TripFromCity")
+  tripsTo   Trip[] @relation("TripToCity")
+}
+
+model Bus {
+  id          String @id @default(uuid())
+  name        String
+  /// AC/Non-AC × Seater/Sleeper, as shown to travellers.
+  busType     String
+  seatRows    Int
+  seatColumns Int
+  totalSeats  Int
+
+  boardingPoints BoardingPoint[]
+  trips          Trip[]
+}
+
+model BoardingPoint {
+  id       String  @id @default(uuid())
+  busId    String
+  name     String
+  /// Pick-up time label, e.g. "9:00 PM".
+  pickupAt String?
+
+  bus      Bus       @relation(fields: [busId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@unique([busId, name])
+}
+
+model Trip {
+  id          String   @id @default(uuid())
+  busId       String
+  fromCityId  String
+  toCityId    String
+  /// Calendar day of travel (date only).
+  travelDate  DateTime @db.Date
+  departureAt DateTime
+  arrivalAt   DateTime
+  /// Whole rupees.
+  farePerSeat Int
+  seatRows    Int
+  seatColumns Int
+  totalSeats  Int
+  createdAt   DateTime @default(now())
+
+  bus      Bus       @relation(fields: [busId], references: [id], onDelete: Cascade)
+  fromCity City      @relation("TripFromCity", fields: [fromCityId], references: [id])
+  toCity   City      @relation("TripToCity", fields: [toCityId], references: [id])
+  seats    Seat[]
+  bookings Booking[]
+
+  @@unique([busId, travelDate])
+  @@index([fromCityId, toCityId, travelDate])
+  @@index([departureAt])
+}
+
+model Seat {
+  id          String  @id @default(uuid())
+  tripId      String
+  /// Row letter + column number, e.g. "A1".
+  seatNumber  String
+  rowIndex    Int
+  columnIndex Int
+  /// Null while the seat is available.
+  bookingId   String?
+
+  trip    Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@unique([tripId, seatNumber])
+  @@index([bookingId])
+}
+
+model Booking {
+  /// The traveller-facing booking id, e.g. "BB-10452".
+  id              String    @id
+  userId          String
+  tripId          String
+  boardingPointId String
+  /// "Booked" | "Cancelled" | "Completed".
+  status          String    @default("Booked")
+  seatCount       Int
+  farePerSeat     Int
+  totalFare       Int
+  createdAt       DateTime  @default(now())
+  cancelledAt     DateTime?
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trip          Trip          @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  boardingPoint BoardingPoint @relation(fields: [boardingPointId], references: [id])
+  passengers    Passenger[]
+  seats         Seat[]
+
+  @@index([userId, createdAt])
+  @@index([tripId])
+}
+
+model Passenger {
+  id         String @id @default(uuid())
+  bookingId  String
+  seatNumber String
+  name       String
+  age        Int
+  gender     String
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, seatNumber])
+}

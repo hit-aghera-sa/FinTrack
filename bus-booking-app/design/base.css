@@ -1,0 +1,71 @@
+/* GENERATED base primitives (F69) — extend, do not fork. All values ride the tokens. */
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-primary:hover { filter: brightness(0.94); }
+.btn-primary:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-secondary:hover { background: rgba(0, 0, 0, 0.04); }
+.btn-secondary:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.card {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.input {
+  font: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 44px;
+  width: 100%;
+}
+.input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+.input:disabled { opacity: 0.5; background: rgba(0, 0, 0, 0.03); }
+.input[aria-invalid='true'] { border-color: #d83f3f; }
+
+/* The six-state convention — every data surface renders exactly one of these. */
+.state-loading, .state-empty, .state-error, .state-success, .state-disabled, .state-stale {
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 0.9em;
+}
+.state-loading { opacity: 0.7; }
+.state-empty { border: 1px dashed rgba(0, 0, 0, 0.25); }
+.state-error { border-left: 3px solid #d83f3f; }
+.state-disabled { opacity: 0.5; pointer-events: none; }
+.state-stale { border-left: 3px solid #ed9e23; }
